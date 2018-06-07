@@ -11,15 +11,17 @@
         android:layout_weight="1">
 
         <Button
-            android:id="@+id/testerWeb"
+            android:id="@+id/homepage_btn"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/getting_started_red"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"/>
+            android:clickable="true">
+        </Button>
 
         <Button
+            android:id="@+id/start_dev_btn"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -36,6 +38,7 @@
         android:layout_weight="1">
 
         <Button
+            android:id="@+id/scrum_btn"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -44,6 +47,7 @@
             android:clickable="true"/>
 
         <Button
+            android:id="@+id/rules_btn"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -60,6 +64,7 @@
         android:layout_weight="1">
 
         <Button
+            android:id="@+id/problem_btn"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -68,6 +73,7 @@
             android:clickable="true"/>
 
         <Button
+            android:id="@+id/mvp_btn"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"

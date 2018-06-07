@@ -113,7 +113,7 @@ public class PokerMainFragment extends Fragment {
 
     private void addSession(){
         if(mPokerHomebase == null){ // need to wait for loading to prevent data from not being initialized
-            Toast.makeText(getContext(), "Please Wait for Connection to Server...", Toast.LENGTH_LONG);//The toast does not seem to appear though
+            Toast.makeText(getContext(), "Wait for connection...", Toast.LENGTH_LONG).show();
         }
         else {
             String numOfSessions = getLastSessionID();

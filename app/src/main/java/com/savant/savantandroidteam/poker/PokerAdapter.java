@@ -67,8 +67,6 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
                 handleClick(position, view);
             }
         });
-
-
     }
 
     @Override
