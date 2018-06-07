@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "522192887601",
+    "firebase_url": "https://savantandroidteam-e4e8c.firebaseio.com",
+    "project_id": "savantandroidteam-e4e8c",
+    "storage_bucket": "savantandroidteam-e4e8c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522192887601:android:378391bb3accf983",
+        "android_client_info": {
+          "package_name": "com.savant.savantandroidteam"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522192887601-9fchbofajh5vgude6lcauuta8vc93hr2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.savant.savantandroidteam",
+            "certificate_hash": "ee65bba89103cca186078b3cee68eb7e2e470a6f"
+          }
+        },
+        {
+          "client_id": "522192887601-fo6h62hnvan3a4bi24r0ot5is58gtkj9.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "522192887601-fo6h62hnvan3a4bi24r0ot5is58gtkj9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOixDdKo_PyzIXCNRT79d5dSXV1Ud4aFw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522192887601-fo6h62hnvan3a4bi24r0ot5is58gtkj9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

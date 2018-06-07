@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#216d99">
+
+
+    <TextView
+        android:id="@+id/tv_session_name_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/llUser"
+        android:text="Session Name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"
+        android:textSize="30sp"
+        android:textColor="#FFFFFF"/>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/llUser"
+        android:layout_marginTop="0dp"
+        android:layout_centerInParent="true">
+
+        <EditText
+            android:id="@+id/et_difficulty_user"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:background="@drawable/et_background_session_diff"
+            android:hint="#"
+            android:textColor="#000000"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:inputType="number"/>
+        <Button
+            android:id="@+id/submit_activity_diff_user"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="-4dp"
+            android:layout_marginLeft="15dp"
+            android:text="submit"
+            android:background="@drawable/submit_poker_host_btn"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_waiting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llUser"
+        android:text="Waiting for Host..."
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:textSize="30sp"
+        android:textColor="#d89194"/>
+
+
+
+
+
+
+
+
+
+
+</RelativeLayout>

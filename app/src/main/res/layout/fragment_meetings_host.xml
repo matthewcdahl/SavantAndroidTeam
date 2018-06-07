@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#216d99"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="20dp">
+
+
+    <EditText
+        android:id="@+id/et_meetings_host_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/et_background_session_diff"
+        android:textColor="#000000"
+        android:hint="Enter Meeting Name..."
+        android:padding="10dp"
+        android:inputType="text"
+        android:imeOptions="actionDone"
+        android:layout_marginBottom="10dp"/>
+    <EditText
+        android:id="@+id/et_meetings_host_place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_meetings_host_name"
+        android:background="@drawable/et_background_session_diff"
+        android:textColor="#000000"
+        android:hint="Enter Meeting Place..."
+        android:padding="10dp"
+        android:inputType="text"
+        android:imeOptions="actionDone"
+        android:layout_marginBottom="10dp"/>
+    <EditText
+        android:id="@+id/et_meetings_host_desc"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:gravity="start"
+        android:layout_below="@id/et_meetings_host_place"
+        android:background="@drawable/et_background_session_diff"
+        android:textColor="#000000"
+        android:hint="Enter Description..."
+        android:padding="15dp"
+        android:inputType="textMultiLine"
+        android:imeOptions="actionDone"
+        android:layout_marginBottom="10dp"/>
+
+    <Button
+        android:id="@+id/btn_meetings_host_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:padding="10dp"
+        android:text="Select Date"
+        android:layout_below="@id/et_meetings_host_desc"
+        android:layout_marginBottom="10dp"
+        android:textColorHint="#000000"/>
+
+    <Button
+        android:id="@+id/btn_meetings_host_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:text="Select Time"
+        android:padding="10dp"
+        android:layout_below="@id/btn_meetings_host_date"
+        android:layout_marginBottom="10dp"
+        android:textColorHint="#000000"/>
+
+
+
+
+</RelativeLayout>

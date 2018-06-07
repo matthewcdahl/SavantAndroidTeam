@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".startup.SplashActivity"
+    android:background="@drawable/splash_gradient">
+
+    <!--Invisible holder for layout purposes-->
+    <ImageView
+        android:id="@+id/splash_center"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible"/>
+
+
+    <!--Savant Logo (Top Left)-->
+    <ImageView
+        android:id="@+id/savant_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/savant_logo_white"
+        android:layout_above="@id/splash_center"
+        android:layout_toLeftOf="@id/splash_center"
+        android:layout_marginBottom="-25dp"
+        android:layout_marginRight="-10dp"/>
+
+    <!-- Android Logo (Bottom Right)-->
+    <ImageView
+        android:id="@+id/android_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/android_logo_white"
+        android:layout_below="@id/splash_center"
+        android:layout_toRightOf="@id/splash_center"
+        android:layout_marginTop="-25dp"
+        android:layout_marginLeft="-10dp"/>
+
+</RelativeLayout>
