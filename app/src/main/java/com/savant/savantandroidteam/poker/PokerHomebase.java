@@ -258,7 +258,6 @@ public class PokerHomebase {
         List<SessionItem> list = getSessions();
         for(int i = 0; i<list.size(); i++){
             if(list.get(i).getId().equals(id)){
-                Log.d("isSessionActive rtn", "true");
                 return true;
             }
         }
@@ -276,8 +275,6 @@ public class PokerHomebase {
 
         List<SessionItem> list = getSessions();
         for(int i = 0; i<list.size(); i++){
-            Log.d("isSessionActive id1", list.get(i).getId());
-            Log.d("isSessionActive id2", id);
             if(list.get(i).getId().equals(id)) return i;
         }
         return -1;

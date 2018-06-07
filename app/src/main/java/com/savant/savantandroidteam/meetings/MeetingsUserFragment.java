@@ -146,7 +146,6 @@ public class MeetingsUserFragment extends Fragment {
     }
 
     private void editMeeting(){
-        Log.d("MAIN SWITCH", "WHY YOU NO WORK");
         MeetingsHostFragment fragment = new MeetingsHostFragment();
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
 
@@ -158,7 +157,6 @@ public class MeetingsUserFragment extends Fragment {
     }
 
     private void switchToMain(){
-        Log.d("MAIN SWITCH", "WHY YOU NO WORK");
         MeetingsMainFragment fragment = new MeetingsMainFragment();
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, fragment);
@@ -174,9 +172,8 @@ public class MeetingsUserFragment extends Fragment {
                 for(DataSnapshot child2: iter2){
                     String key = child2.getKey();
                     if(key.equals("id")){
-                        Log.d("TAG1", child2.getValue().toString());
-                        Log.d("TAG2", meetingID);
-                        if(child2.getValue().toString().equals(meetingID)){Log.d("TAG3", "YAY"); return false;}
+
+                        if(child2.getValue().toString().equals(meetingID)) return false;
                     }
                 }
             }
@@ -192,9 +189,12 @@ public class MeetingsUserFragment extends Fragment {
         preferences.putString("date", mMeetingHomebase.getDate(getPosition()));
         preferences.putString("time", mMeetingHomebase.getTime(getPosition()));
         preferences.putString("id", mMeetingHomebase.getId(getPosition()));
+        SharedPreferences.Editor prefs = getContext().getSharedPreferences("MeetingPrefsExtra", MODE_PRIVATE).edit();
+        prefs.putString("isEdited", "true");
         preferences.putString("isEdited", "true");
 
         preferences.apply();
+        prefs.apply();
 
     }
 

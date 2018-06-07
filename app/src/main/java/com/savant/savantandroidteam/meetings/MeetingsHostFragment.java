@@ -102,6 +102,7 @@ public class MeetingsHostFragment extends Fragment {
     public void onStart(){
         super.onStart();
         loadInfo();
+
     }
 
     @Override
@@ -146,7 +147,8 @@ public class MeetingsHostFragment extends Fragment {
         }
         else {
             uploadMeeting();
-            clearInfo();
+            clearInfo("MeetingPrefs");
+            clearInfo("MeetingPrefsExtra");
             switchToMain();
         }
     }
@@ -154,11 +156,22 @@ public class MeetingsHostFragment extends Fragment {
 
     private void uploadMeeting(){
         String id = "";
-        if(isEdited){
-            id = idIfEdited;
+        boolean isEdit = false;
+        SharedPreferences prefs1 = getContext().getSharedPreferences("MeetingPrefsExtra", MODE_PRIVATE);
+        if(prefs1.getString("isEdited", "false").equals("true")) isEdit = true;
+        else isEdit = false;
+        if(isEdit){
+            SharedPreferences prefs = getContext().getSharedPreferences("MeetingPrefsExtra", MODE_PRIVATE);
+            id = prefs.getString("id", "OOPS");
+            String formerDate = prefs.getString("date", "ERROR!!");
+            String formerTime = prefs.getString("time", "ERROR TIME!!");
+            Log.d("FORMER DATE", formerDate);
+            Log.d("FORMER TIME", formerTime);
+            mMeetingsRef.child(formerDate + " " + formerTime + " " + prefs.getString("id", "")).removeValue();
+
         }
-        else{
-            id = Integer.toString((int)(Math.random()*5000+1)); //Random number so if there are 2 meetings at same time one will not be overwritten
+        else {
+            id = Integer.toString((int) (Math.random() * 5000 + 1)); //Random number so if there are 2 meetings at same time one will not be overwritten
         }
         String name = mNameET.getText().toString();
         String place = mPlaceET.getText().toString();
@@ -172,6 +185,7 @@ public class MeetingsHostFragment extends Fragment {
         currMeetingRef.child("time").setValue(time);
         currMeetingRef.child("id").setValue(id);
         currMeetingRef.child("description").setValue(description);
+
     }
 
     private void switchToMain(){
@@ -193,7 +207,7 @@ public class MeetingsHostFragment extends Fragment {
         preferences.apply();
 
     }
-
+    //TODO COMMENT THIS OUT
     private void loadInfo(){
         SharedPreferences preferences = getContext().getSharedPreferences("MeetingPrefs", MODE_PRIVATE);
 
@@ -201,6 +215,11 @@ public class MeetingsHostFragment extends Fragment {
         if(edit.equals("true")){
             isEdited = true;
             idIfEdited = preferences.getString("id", "000");
+            SharedPreferences.Editor prefsExtra = getContext().getSharedPreferences("MeetingPrefsExtra", MODE_PRIVATE).edit();
+            prefsExtra.putString("id", preferences.getString("id", ""));
+            prefsExtra.putString("time", preferences.getString("time", ""));
+            prefsExtra.putString("date", preferences.getString("date", ""));
+            prefsExtra.apply();
         }
         else isEdited = false;
 
@@ -209,11 +228,13 @@ public class MeetingsHostFragment extends Fragment {
         mDescriptionET.setText(preferences.getString("description", ""));
         mDateBtn.setText(preferences.getString("date", "Select Date"));
         mTimeBtn.setText(preferences.getString("time", "Select Time"));
-        clearInfo();
+        String holder = preferences.getString("isEdited", "false");
+        clearInfo("MeetingPrefs");
+
     }
 
-    private void clearInfo(){
-        getContext().getSharedPreferences("MeetingPrefs", 0).edit().clear().commit();
+    private void clearInfo(String prefName){
+        getContext().getSharedPreferences(prefName, 0).edit().clear().commit();
     }
 
 

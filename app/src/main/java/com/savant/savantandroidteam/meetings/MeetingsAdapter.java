@@ -94,7 +94,6 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
 
     private void handleClick(int position, final View view){
         AppCompatActivity activity = (AppCompatActivity) view.getContext();
-        Log.d("POSITION", Integer.toString(position));
         MeetingsUserFragment fragment = new MeetingsUserFragment();
         Bundle arguments = new Bundle();
         arguments.putString("meetingID", getMeetingID(position));

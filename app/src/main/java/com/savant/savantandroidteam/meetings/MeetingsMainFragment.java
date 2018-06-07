@@ -125,7 +125,7 @@ public class MeetingsMainFragment extends Fragment {
 
     private void startMeeting(/*String id, String name*/){
 
-        SharedPreferences.Editor edit = getContext().getSharedPreferences("MeetingPrefs", Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getContext().getSharedPreferences("MeetingPrefsExtra", Context.MODE_PRIVATE).edit();
         edit.putString("isEdited", "false");
         edit.apply();
 
