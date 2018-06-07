@@ -124,7 +124,7 @@ public class MeetingsHomebase {
     }
 
 
-    //Get all variables associated with the meetings
+    //Get all variables associated with the meetings.
     public String getName(int pos) {
         List<MeetingItem> list = getMeetings();
         return list.get(pos).getName();
