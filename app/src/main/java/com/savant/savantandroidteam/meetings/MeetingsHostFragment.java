@@ -207,7 +207,7 @@ public class MeetingsHostFragment extends Fragment {
         preferences.apply();
 
     }
-    //TODO COMMENT THIS OUT
+    //TODO ADD COMMENTS
     private void loadInfo(){
         SharedPreferences preferences = getContext().getSharedPreferences("MeetingPrefs", MODE_PRIVATE);
 

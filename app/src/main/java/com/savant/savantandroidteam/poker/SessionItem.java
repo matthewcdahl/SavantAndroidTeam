@@ -12,7 +12,7 @@ import java.util.ArrayList;
 * host: String - The first name of the one who created it
 * responses: ArrayList - The names and responses of all users
 * id: String - number to create session uniqueness
-* revealed: String - has the host ended the session? TODO (Should be a boolean)
+* revealed: String - has the host ended the session?
 *
 */
 

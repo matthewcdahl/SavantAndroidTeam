@@ -72,11 +72,12 @@ public class PokerResultsFragment extends Fragment {
         sessionName = (TextView) view.findViewById(R.id.session_name_results);
         conversionText = (TextView) view.findViewById(R.id.conversion_box);
         conversionText.setVisibility(View.GONE);
-        conversionText.setText("Conversion\n\n" +
+        String animalsToSet = "Conversion\n\n" +
                 "Mouse: 1\nGroundhog: 2\n" +
                 "Fox: 3\nLion: 5\n" +
                 "Buffalo: 8\nElephant: 13\n" +
-                "HoneyBadger: 21");//TODO make a seperate variable
+                "HoneyBadger: 21";
+        conversionText.setText(animalsToSet);
         infoImage = (ImageView) view.findViewById(R.id.info_image_btn);
         isVisible = false;
 
