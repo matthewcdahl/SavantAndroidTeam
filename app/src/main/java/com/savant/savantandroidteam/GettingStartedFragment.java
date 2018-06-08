@@ -49,7 +49,8 @@ public class GettingStartedFragment extends Fragment {
         mHomepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://wiki.savant.com/display/ENG/Android"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://wiki.savant.com/display/ENG/Android"));
                 startActivity(browserIntent);
             }
         });
@@ -57,35 +58,40 @@ public class GettingStartedFragment extends Fragment {
         mDeveloping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://wiki.savant.com/display/ENG/Getting+Started+with+Development"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://wiki.savant.com/display/ENG/Getting+Started+with+Development"));
                 startActivity(browserIntent);
             }
         });
         mScrum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://wiki.savant.com/pages/viewpage.action?pageId=3382357"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://wiki.savant.com/pages/viewpage.action?pageId=3382357"));
                 startActivity(browserIntent);
             }
         });
         mRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://wiki.savant.com/display/ENG/Rules%2C+Standards%2C+Known+Issues%2C+FQA"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://wiki.savant.com/display/ENG/Rules%2C+Standards%2C+Known+Issues%2C+FQA"));
                 startActivity(browserIntent);
             }
         });
         mProblem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://wiki.savant.com/display/ENG/Guide+to+problem+solving"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://wiki.savant.com/display/ENG/Guide+to+problem+solving"));
                 startActivity(browserIntent);
             }
         });
         mMVP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://wiki.savant.com/display/ENG/MVP+Design"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://wiki.savant.com/display/ENG/MVP+Design"));
                 startActivity(browserIntent);
             }
         });

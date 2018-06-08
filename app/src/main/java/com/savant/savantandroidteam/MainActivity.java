@@ -24,6 +24,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.savant.savantandroidteam.meetings.MeetingsMainFragment;
 import com.savant.savantandroidteam.poker.PokerMainFragment;
 import com.savant.savantandroidteam.profile.ProfileFragment;
@@ -40,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //Firebase
     FirebaseAuth mAuth;
+    FirebaseDatabase mDatabase;
+    DatabaseReference mRootRef;
+    DatabaseReference mUserRef;
 
 
 
@@ -55,6 +60,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance();
+        mRootRef = mDatabase.getReference("users");
+        mUserRef = mRootRef.child(getModifiedEmail());
 
 
         //Set up the drawer
@@ -87,21 +95,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GettingStartedFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_getting_started);
         }
-
-        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                Log.d("DAHLLLLLLL", key);
-            }
-        };
-
-        getPreferences(MODE_PRIVATE).registerOnSharedPreferenceChangeListener(listener);
-
-        getPreferences(MODE_PRIVATE).edit().putString("Hi", "Hello").apply();
-
-        getPreferences(MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(listener);
-
-
 
     }
 
@@ -162,6 +155,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView userNameView = (TextView) hView.findViewById(R.id.tv_name_drawer_header);
         TextView emailView = (TextView) hView.findViewById(R.id.tv_email_drawer_header);
 
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+                mDrawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
         String fullName = getFullName();
         String email = getEmail();
         int img = getProfileImage();
@@ -186,6 +187,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Returns the users Email from Firebase
     private String getEmail(){
         return mAuth.getCurrentUser().getEmail().trim();
+    }
+
+    //Returns the users Email from Firebase
+    private String getModifiedEmail(){
+        return mAuth.getCurrentUser().getEmail().trim().replace('.','*');
     }
 
     //Phone back button pressed will not work except to close drawer
@@ -226,6 +232,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             R.drawable.profile_icon_46, R.drawable.profile_icon_47, R.drawable.profile_icon_48,
             R.drawable.profile_icon_49, R.drawable.profile_icon_50
     };
+
+
 
 
 

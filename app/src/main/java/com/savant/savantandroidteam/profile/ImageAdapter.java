@@ -39,17 +39,14 @@ public class ImageAdapter extends BaseAdapter {
         if (convertView == null) {
             // if it's not recycled, initialize some attributes
             imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
+            imageView.setLayoutParams(new ViewGroup.LayoutParams(300, 300));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(8, 8, 8, 8);
         } else {
             imageView = (ImageView) convertView;
         }
 
-        Glide
-                .with(mContext)
-                .load(mThumbIds[position])
-                .into(imageView);
+        Glide.with(mContext).load(mThumbIds[position]).into(imageView);
 
         //imageView.setImageResource(mThumbIds[position]);
         return imageView;

@@ -84,7 +84,7 @@ public class ProfileFragment extends Fragment {
     }
     private int getImage(){
         SharedPreferences prefs = getContext().getSharedPreferences("Profile", Context.MODE_PRIVATE);
-        return prefs.getInt("pictureID", 16);
+        return prefs.getInt("pictureID", 15);
     }
 
 
