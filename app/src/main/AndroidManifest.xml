@@ -17,7 +17,7 @@
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".startup.LoginActivity"
             android:label="Login Activity"
@@ -36,8 +36,6 @@
             android:label="Forgot Password"
             android:parentActivityName=".startup.LoginActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".meetings.MeetingTimeFragment" />
-        <activity android:name=".meetings.MeetingCalendarFragment"/>
     </application>
 
 </manifest>
