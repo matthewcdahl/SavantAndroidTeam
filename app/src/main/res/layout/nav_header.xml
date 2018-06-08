@@ -11,6 +11,7 @@
 
 
     <ImageView
+        android:id="@+id/iv_image"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/ic_face_white_60dp" />

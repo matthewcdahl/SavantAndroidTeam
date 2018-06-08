@@ -1,9 +1,10 @@
 package com.savant.savantandroidteam;
 
-import android.app.ActionBar;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NavUtils;
@@ -13,17 +14,19 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.savant.savantandroidteam.meetings.MeetingsMainFragment;
 import com.savant.savantandroidteam.poker.PokerMainFragment;
+import com.savant.savantandroidteam.profile.ProfileFragment;
 import com.savant.savantandroidteam.startup.LoginActivity;
 
 
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //UI
     private DrawerLayout mDrawer;
+
     private NavigationView navView;
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -84,7 +88,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_getting_started);
         }
 
+        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                Log.d("DAHLLLLLLL", key);
+            }
+        };
+
+        getPreferences(MODE_PRIVATE).registerOnSharedPreferenceChangeListener(listener);
+
+        getPreferences(MODE_PRIVATE).edit().putString("Hi", "Hello").apply();
+
+        getPreferences(MODE_PRIVATE).unregisterOnSharedPreferenceChangeListener(listener);
+
+
+
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -137,12 +158,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setHeaderInfo(){
         navView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navView.getHeaderView(0);
+        ImageView profileImage = (ImageView) hView.findViewById(R.id.iv_image);
         TextView userNameView = (TextView) hView.findViewById(R.id.tv_name_drawer_header);
         TextView emailView = (TextView) hView.findViewById(R.id.tv_email_drawer_header);
 
         String fullName = getFullName();
         String email = getEmail();
+        int img = getProfileImage();
 
+        profileImage.setImageResource(img);
         userNameView.setText(fullName);
         emailView.setText(email);
 
@@ -175,6 +199,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }
+
+    private int getProfileImage(){
+        SharedPreferences prefs = getSharedPreferences("Profile", MODE_PRIVATE);
+        int rtn = prefs.getInt("pictureID", 15);
+        return mThumbIds[rtn];
+
+    }
+
+    private Integer[] mThumbIds = {
+            R.drawable.profile_icon_1, R.drawable.profile_icon_2, R.drawable.profile_icon_3,
+            R.drawable.profile_icon_4, R.drawable.profile_icon_5, R.drawable.profile_icon_6,
+            R.drawable.profile_icon_7, R.drawable.profile_icon_8, R.drawable.profile_icon_9,
+            R.drawable.profile_icon_10, R.drawable.profile_icon_11, R.drawable.profile_icon_12,
+            R.drawable.profile_icon_13, R.drawable.profile_icon_14, R.drawable.profile_icon_15,
+            R.drawable.profile_icon_16, R.drawable.profile_icon_17, R.drawable.profile_icon_18,
+            R.drawable.profile_icon_19, R.drawable.profile_icon_20, R.drawable.profile_icon_21,
+            R.drawable.profile_icon_22, R.drawable.profile_icon_23, R.drawable.profile_icon_24,
+            R.drawable.profile_icon_25, R.drawable.profile_icon_26, R.drawable.profile_icon_27,
+            R.drawable.profile_icon_28, R.drawable.profile_icon_29, R.drawable.profile_icon_30,
+            R.drawable.profile_icon_31, R.drawable.profile_icon_32, R.drawable.profile_icon_33,
+            R.drawable.profile_icon_34, R.drawable.profile_icon_35, R.drawable.profile_icon_36,
+            R.drawable.profile_icon_37, R.drawable.profile_icon_38, R.drawable.profile_icon_39,
+            R.drawable.profile_icon_40, R.drawable.profile_icon_41, R.drawable.profile_icon_42,
+            R.drawable.profile_icon_43, R.drawable.profile_icon_44, R.drawable.profile_icon_45,
+            R.drawable.profile_icon_46, R.drawable.profile_icon_47, R.drawable.profile_icon_48,
+            R.drawable.profile_icon_49, R.drawable.profile_icon_50
+    };
+
+
+
 
 
 
