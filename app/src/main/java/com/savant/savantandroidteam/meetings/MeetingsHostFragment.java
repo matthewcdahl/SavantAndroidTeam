@@ -62,7 +62,12 @@ public class MeetingsHostFragment extends Fragment {
         setHasOptionsMenu(true);
         final View view = inflater.inflate(R.layout.fragment_meetings_host, container, false);
 
-        ((MainActivity) getActivity()).setTitle("Create Meeting");
+
+        SharedPreferences prefs1 = getContext().getSharedPreferences("MeetingPrefsExtra", MODE_PRIVATE);
+        if(prefs1.getString("isEdited", "false").equals("true")) ((MainActivity) getActivity()).setTitle("Edit Meeting");
+        else ((MainActivity) getActivity()).setTitle("Create Meeting");
+
+
 
         //TOOLBAR
         masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
@@ -258,13 +263,6 @@ public class MeetingsHostFragment extends Fragment {
     private void clearInfo(String prefName){
         getContext().getSharedPreferences(prefName, 0).edit().clear().commit();
     }
-
-
-
-
-
-
-
 
 
 
