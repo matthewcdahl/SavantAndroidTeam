@@ -6,10 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".meetings.MeetingCalendarFragment">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_with_back"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <CalendarView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/calendarView"/>
+        android:id="@+id/calendarView"
+        android:layout_marginTop="?attr/actionBarSize"/>
 
     <FrameLayout
         android:layout_width="match_parent"

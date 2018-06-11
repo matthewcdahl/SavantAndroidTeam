@@ -34,6 +34,8 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        ((MainActivity)getActivity()).setUpToolbar("Profile");
+
         mAuth = FirebaseAuth.getInstance();
         mName = (TextView) view.findViewById(R.id.profile_name);
         mEmail = (TextView) view.findViewById(R.id.profile_email);
@@ -46,6 +48,7 @@ public class ProfileFragment extends Fragment {
         editPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               // ((MainActivity) getActivity()).getSupportActionBar().hide();
                 ProfileIconsFragment fragment = new ProfileIconsFragment();
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, fragment);

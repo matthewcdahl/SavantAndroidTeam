@@ -1,60 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#216d99"
-    android:paddingLeft="10dp"
-    android:paddingTop="20dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
-        android:textSize="30sp"
-        android:text="Meeting Name"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/tv_meeting_user_name"/>
-    <TextView
-        android:text="1/1/2000 4:30 PM"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textColor="#FFFFFF"
-        android:textSize="25sp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/tv_meeting_user_name"
-        android:id="@+id/tv_meeting_user_id"/>
-
-    <TextView
-        android:text="Orleans Room"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textColor="#FFFFFF"
-        android:textSize="25sp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/tv_meeting_user_id"
-        android:id="@+id/tv_meeting_user_place"/>
-
-    <TextView
-        android:text="Filler text goes here."
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_with_back"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:maxLines="20"
-        android:scrollbars="vertical"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="15dp"
-        android:padding="10dp"
-        android:textColor="#000000"
-        android:background="#FFFFFF"
-        android:textSize="22sp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/tv_meeting_user_place"
-        android:id="@+id/tv_meeting_user_desc"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:elevation="4dp"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#216d99"
+        android:paddingLeft="10dp"
+        android:paddingTop="20dp">
+
+        <TextView
+            android:id="@+id/tv_meeting_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="Meeting Name"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/tv_meeting_user_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_meeting_user_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="1/1/2000 4:30 PM"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tv_meeting_user_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_meeting_user_id"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="Orleans Room"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tv_meeting_user_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_meeting_user_place"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:background="#FFFFFF"
+            android:maxLines="20"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:text="Filler text goes here."
+            android:textColor="#000000"
+            android:textSize="22sp" />
 
 
-
-
+    </RelativeLayout>
 </RelativeLayout>

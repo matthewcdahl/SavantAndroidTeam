@@ -12,7 +12,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.savant.savantandroidteam.MainActivity;
 import com.savant.savantandroidteam.R;
+import com.savant.savantandroidteam.poker.PokerMainFragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -49,6 +52,10 @@ public class MeetingsHostFragment extends Fragment {
     private DatabaseReference mRootRef;
     private DatabaseReference mMeetingsRef;
 
+    //TOOLBAR
+    private ActionBar masterBarHolder;
+    Toolbar toolbar;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,6 +63,21 @@ public class MeetingsHostFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_meetings_host, container, false);
 
         ((MainActivity) getActivity()).setTitle("Create Meeting");
+
+        //TOOLBAR
+        masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
+        masterBarHolder.hide();
+
+        toolbar = view.findViewById(R.id.toolbar_with_back);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new MeetingsMainFragment()).commit();
+            }
+        });
 
 
 
@@ -81,7 +103,7 @@ public class MeetingsHostFragment extends Fragment {
                 saveInfo();
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.fragment_container, new MeetingCalendarFragment()).commit();
+                ft.replace(R.id.fragment_container, new MeetingCalendarFragment()).addToBackStack(null).commit();
             }
         });
         mTimeBtn.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +112,7 @@ public class MeetingsHostFragment extends Fragment {
                 saveInfo();
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.fragment_container, new MeetingTimeFragment()).commit();
+                ft.replace(R.id.fragment_container, new MeetingTimeFragment()).addToBackStack(null).commit();
             }
         });
 
@@ -236,6 +258,7 @@ public class MeetingsHostFragment extends Fragment {
     private void clearInfo(String prefName){
         getContext().getSharedPreferences(prefName, 0).edit().clear().commit();
     }
+
 
 
 

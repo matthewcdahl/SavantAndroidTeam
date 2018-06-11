@@ -17,7 +17,6 @@ package com.savant.savantandroidteam.poker;
 
  */
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,7 +40,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.appcompat.*;
+import android.support.v7.app.ActionBar;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -51,6 +51,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.savant.savantandroidteam.MainActivity;
 import com.savant.savantandroidteam.R;
+import com.savant.savantandroidteam.profile.ProfileFragment;
 
 import java.util.zip.Inflater;
 
@@ -76,6 +77,10 @@ public class PokerHostFragment extends Fragment {
     //Logic
     private boolean dialogIsOpen;
 
+    //TOOLBAR
+    private ActionBar masterBarHolder;
+    Toolbar toolbar;
+
 
 
 
@@ -86,6 +91,21 @@ public class PokerHostFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_poker_host_new, container, false);
         ((MainActivity) getActivity()).setTitle("Create Session");
 
+
+        //TOOLBAR
+        masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
+        masterBarHolder.hide();
+
+        toolbar = view.findViewById(R.id.toolbar_with_back);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new PokerMainFragment()).commit();
+            }
+        });
 
 
 

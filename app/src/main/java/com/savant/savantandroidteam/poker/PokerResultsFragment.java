@@ -8,7 +8,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +56,9 @@ public class PokerResultsFragment extends Fragment {
     private DatabaseReference mCurrentSession;
     private PokerHomebase mPokerHomebase;
 
+    private ActionBar masterBarHolder;
+    Toolbar toolbar;
+
 
     @Nullable
     @Override
@@ -62,6 +67,21 @@ public class PokerResultsFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_poker_results, container, false);
 
         ((MainActivity) getActivity()).setTitle("Session Results");
+
+        //TOOLBAR
+        masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
+        masterBarHolder.hide();
+
+        toolbar = view.findViewById(R.id.toolbar_with_back);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new PokerMainFragment()).commit();
+            }
+        });
 
 
         //UI

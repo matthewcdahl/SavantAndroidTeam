@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -46,6 +47,10 @@ public class PokerUserFragment extends Fragment {
     private DatabaseReference mNameRef;
     private DatabaseReference mRevealedRef;
 
+    //TOOLBAR
+    private android.support.v7.app.ActionBar masterBarHolder;
+    Toolbar toolbar;
+
 
     @Nullable
     @Override
@@ -54,6 +59,21 @@ public class PokerUserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_poker_user, container, false);
 
         ((MainActivity) getActivity()).setTitle("Submit Response");
+
+        //TOOLBAR
+        masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
+        masterBarHolder.hide();
+
+        toolbar = view.findViewById(R.id.toolbar_with_back);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new PokerMainFragment()).commit();
+            }
+        });
 
 
         //UI

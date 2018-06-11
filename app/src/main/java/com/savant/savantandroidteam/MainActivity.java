@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private NavigationView navView;
     private ActionBarDrawerToggle mDrawerToggle;
+    public Toolbar toolbar;
 
     //Firebase
     FirebaseAuth mAuth;
@@ -54,9 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         //UI
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
@@ -65,7 +65,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mUserRef = mRootRef.child(getModifiedEmail());
 
 
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        setUpToolbar("Savant Android Wiki Links");
         //Set up the drawer
+        if(savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GettingStartedFragment()).commit();
+            navigationView.setCheckedItem(R.id.nav_getting_started);
+        }
+
+    }
+
+
+    public void setUpToolbar(String title){
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().show();
+
+        getSupportActionBar().setTitle(title);
+
+
         mDrawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -91,14 +110,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         //If there was no saved fragment when the app was closed it will load up the getting started
-        if(savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GettingStartedFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_getting_started);
-        }
 
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -200,10 +213,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed(){
         if(mDrawer.isDrawerOpen(GravityCompat.START)){
             mDrawer.closeDrawer(GravityCompat.START);
-        }
-        else{
-        }
-
+        } else if(getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else{}
     }
 
     private int getProfileImage(){

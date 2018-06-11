@@ -51,7 +51,9 @@ public class PokerMainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_poker_main, container, false);
-        ((MainActivity) getActivity()).setTitle("Poker Sessions");
+        ((MainActivity)getActivity()).setUpToolbar("Poker Sessions");
+
+
 
         //Firebase
         mDatabase = FirebaseDatabase.getInstance();
@@ -154,7 +156,7 @@ public class PokerMainFragment extends Fragment {
         fragment.setArguments(arguments);
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, fragment);
-        ft.commit();
+        ft.addToBackStack(null).commit();
     }
 
     private String getLastSessionID(){

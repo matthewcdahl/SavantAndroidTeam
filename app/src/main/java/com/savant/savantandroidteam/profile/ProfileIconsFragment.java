@@ -8,8 +8,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -19,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.savant.savantandroidteam.GettingStartedFragment;
 import com.savant.savantandroidteam.MainActivity;
 import com.savant.savantandroidteam.R;
 
@@ -27,6 +35,9 @@ public class ProfileIconsFragment extends Fragment {
     GridView gridView;
     private NavigationView navView;
 
+    //TOOLBAR
+    private ActionBar masterBarHolder;
+    Toolbar toolbar;
 
 
     @Nullable
@@ -34,6 +45,24 @@ public class ProfileIconsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile_icons, container, false);
         ((MainActivity) getActivity()).setTitle("Select Icon");
+
+
+        //TOOLBAR
+        masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
+        masterBarHolder.hide();
+
+        toolbar = view.findViewById(R.id.toolbar_with_back);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new ProfileFragment()).commit();            }
+        });
+
+
+
 
         gridView = (GridView) view.findViewById(R.id.gridview);
         gridView.setAdapter(new ImageAdapter(getContext()));
@@ -58,7 +87,10 @@ public class ProfileIconsFragment extends Fragment {
         return view;
     }
 
-    private void setHeaderInfo(int pos){
+
+
+
+    private void setHeaderInfo(int pos) {
         navView = (NavigationView) getActivity().findViewById(R.id.nav_view);
         View hView = navView.getHeaderView(0);
         ImageView profileImage = (ImageView) hView.findViewById(R.id.iv_image);
@@ -68,7 +100,7 @@ public class ProfileIconsFragment extends Fragment {
         profileImage.setImageResource(img);
     }
 
-    private int getProfileImage(int pos){
+    private int getProfileImage(int pos) {
         return mThumbIds[pos];
     }
 

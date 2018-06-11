@@ -54,7 +54,7 @@ public class MeetingsMainFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_meetings_main, container, false);
 
-        ((MainActivity) getActivity()).setTitle("Upcoming Meetings");
+        ((MainActivity)getActivity()).setUpToolbar("Meetings");
 
 
         mDatabase = FirebaseDatabase.getInstance();
