@@ -10,11 +10,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,6 +41,7 @@ import com.savant.savantandroidteam.MainActivity;
 import com.savant.savantandroidteam.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PokerResultsFragment extends Fragment {
 
@@ -48,25 +53,39 @@ public class PokerResultsFragment extends Fragment {
     Button mDeleteButton;
     ImageView infoImage;
     private boolean isVisible;
+    private RecyclerView.Adapter adapter;
+    private List<ResultItem> resultItems;
+    private List<Tuple> resultPics;
+    private RecyclerView mRecyclerView;
+
 
     //Firebase
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mPokerDatabase;
     private DatabaseReference mCurrentSession;
-    private PokerHomebase mPokerHomebase;
+    private DatabaseReference mCurrentResults;
+    private DatabaseReference mRootRef;
+    private PokerResultsHomebase newHomebase;
+    private PokerHomebase pictureHomebase;
 
     private ActionBar masterBarHolder;
     Toolbar toolbar;
 
 
+    Animation openConversion;
+    Animation closeConversion;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        final View view = inflater.inflate(R.layout.fragment_poker_results, container, false);
+        final View view = inflater.inflate(R.layout.fragment_poker_results_new, container, false);
 
         ((MainActivity) getActivity()).setTitle("Session Results");
+
+        openConversion = AnimationUtils.loadAnimation(getContext(), R.anim.conversion_open);
+        closeConversion = AnimationUtils.loadAnimation(getContext(), R.anim.conversion_close);
 
         //TOOLBAR
         masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
@@ -100,23 +119,29 @@ public class PokerResultsFragment extends Fragment {
         conversionText.setText(animalsToSet);
         infoImage = (ImageView) view.findViewById(R.id.info_image_btn);
         isVisible = false;
-
+        mRecyclerView = view.findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         //Firebase
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         mPokerDatabase = mDatabase.getReference("poker");
         mCurrentSession = mPokerDatabase.child(getSession());
+        mCurrentResults = mCurrentSession.child("responses");
+        mRootRef = mDatabase.getReference();
+
+
 
         //Firebase listener
-        mPokerDatabase.addValueEventListener(new ValueEventListener() {
+        mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mPokerHomebase = new PokerHomebase(dataSnapshot);
+                newHomebase = new PokerResultsHomebase(dataSnapshot, getSession());
                 if (PokerResultsFragment.this.isVisible()) {
-                    int isRevealedPos = mPokerHomebase.getPosId(getSession());
-                    if (mPokerHomebase.isRevealed(isRevealedPos)) {//if the session has not been deleted
-                        setResults();
+                    int isRevealedPos = newHomebase.getPosId(getSession());
+                    if (newHomebase.isRevealed(isRevealedPos)) {//if the session has not been deleted
+                        addSessionsToView();
                         setName();
                         initializeDeletButton();
 
@@ -147,12 +172,14 @@ public class PokerResultsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(!isVisible) {
+                    conversionText.startAnimation(openConversion);
                     isVisible = true;
                     conversionText.setVisibility(View.VISIBLE);
                     infoImage.setImageResource(R.drawable.ic_close_black_24dp);
                 }
                 else {
                     isVisible = false;
+                    conversionText.startAnimation(closeConversion);
                     conversionText.setVisibility(View.GONE);
                     infoImage.setImageResource(R.drawable.ic_info_outline_white_24dp);
                 }
@@ -182,27 +209,14 @@ public class PokerResultsFragment extends Fragment {
         return sessionName;
     }
 
-    //Get the names of those who gave answers
-    private String getFinalResultsNames() {
-        return mPokerHomebase.getResultNames(getSession());
-    }
-
-    //Get their associated animals
-    private String getFinalResultsAnimals() { return mPokerHomebase.getResultAnimals(getSession());}
 
 
-    //Set their results
-    private void setResults() {
-        nameTextView.setText(getFinalResultsNames());
-        animalTextView.setText(getFinalResultsAnimals());
-
-    }
 
 
     //remove session from firebase and listeners should take care of the rest
     private void deleteSession() {
         String id = getSession();
-        mPokerHomebase.removeSession(id);
+        newHomebase.removeSession(id);
     }
 
     //return to main fragment
@@ -216,15 +230,23 @@ public class PokerResultsFragment extends Fragment {
 
     //Will only show the delete button if they are the host
     private void initializeDeletButton() {
-        if (!mPokerHomebase.isHostOfSessionDelete(getSession())) {
+        if (!newHomebase.isHostOfSessionDelete(getSession())) {
             mDeleteButton.setVisibility(View.GONE);
         } else mDeleteButton.setVisibility(View.VISIBLE);
     }
 
     //name of the session
     private void setName() {
-        String name = mPokerHomebase.getResultSessionName(getSession());
+        String name = newHomebase.getResultSessionName(getSession());
         sessionName.setText(name);
+    }
+
+    private void addSessionsToView(){
+        resultItems = newHomebase.getResults();
+        //Log.d("ayyyyayay", resultItems.get(0).getName());
+        //Log.d("MatthewCDahl", resultItems.get(0).getPicId());
+        adapter = new PokerResultsAdapter(resultItems, getContext());
+        mRecyclerView.setAdapter(adapter);
     }
 
 

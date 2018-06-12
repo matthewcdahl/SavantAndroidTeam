@@ -1,5 +1,7 @@
 package com.savant.savantandroidteam.poker;
 
+import android.provider.ContactsContract;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,15 +27,20 @@ public class PokerHomebase {
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
+    private DatabaseReference mUsersRef;
+    private String mPicId;
+
 
     //Private Variable for inner use
     public DataSnapshot mDataSnapshot;
+    private ArrayList<Tuple> usersPics = new ArrayList<>();
 
     public PokerHomebase(){
         mDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mRootRef = mDatabase.getReference("poker");
         mDataSnapshot = getSnapshot();
+        mUsersRef = mDatabase.getReference("users");
     }
 
     public PokerHomebase(DataSnapshot ss){ // For loading purposes this will help speed things along if the snapshot is available
@@ -41,6 +48,30 @@ public class PokerHomebase {
         mAuth = FirebaseAuth.getInstance();
         mRootRef = mDatabase.getReference("poker");
         mDataSnapshot = ss;
+        mUsersRef = mDatabase.getReference("users");
+
+        mUsersRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+                for(DataSnapshot child: iter){
+                    String name;
+                    String id = "15";
+                    name = extractName(child.getKey());
+                    Iterable<DataSnapshot> iter2 = child.getChildren();
+                    for(DataSnapshot child2: iter2){
+                        if(child2.getKey().equals("picture")){
+                            id = child2.getValue().toString();
+                        }
+                    }
+                    usersPics.add(new Tuple(name, id));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
     }
 
     public DataSnapshot getSnapshot(){
@@ -186,7 +217,7 @@ public class PokerHomebase {
         List<SessionItem> list = getSessions();
         ArrayList<Tuple> res = list.get(idPos).getResponses();
         for (int i = 0; i < res.size(); i++) {
-            rtn += res.get(i).getName() + "\n";
+            rtn += res.get(i).getName() + ":" + "\n";
         }
 
         return rtn;
@@ -279,6 +310,69 @@ public class PokerHomebase {
         }
         return -1;
 
+    }
+
+    public List<ResultItem> getResults(){
+        List<ResultItem> finalList = new ArrayList<>();
+        //DataSnapshot ss = getSnapshot();
+        Iterable<DataSnapshot> children = mDataSnapshot.getChildren();
+
+
+        for(DataSnapshot child: children) {
+
+            Iterable<DataSnapshot> metaData = child.getChildren();
+            ResultItem toAdd = new ResultItem();
+            toAdd.setName(child.getKey());
+            toAdd.setResult(child.getValue().toString());
+            toAdd.setPicId(getUserPicture(child.getKey()));
+
+            finalList.add(toAdd);
+
+
+        }
+        //printResultsArrayList(finalList);
+        return finalList;
+    }
+
+    private String getUserPicture(final String name){
+        for(int i = 0; i<usersPics.size(); i++){
+            if(usersPics.get(i).getName().equals(name)){
+                return usersPics.get(i).getResponse();
+            }
+        }
+        return "15";
+    }
+
+    private boolean namesAreEqual(String email, String name){
+        String fn = email.substring(0, email.indexOf(","));
+        fn = fn.substring(0,1).toUpperCase() + fn.substring(1);
+        if(fn.equals(name)) return true;
+        else return false;
+    }
+
+    //For debugging purposes - do not use in distribution
+    private void printResultsArrayList(List<ResultItem> arr){
+        for(int i = 0; i<arr.size(); i++){
+            ResultItem curr = arr.get(i);
+            String name = curr.getName();
+            String result = curr.getResult();
+            //String picId = curr.getId();
+
+
+            Log.d("NAME", name);
+            Log.d("Result", result);
+            //Log.d("ID", id);
+
+
+        }
+    }
+
+
+
+    private String extractName(String email){
+        String fn = email.substring(0, email.indexOf(","));
+        fn = fn.substring(0,1).toUpperCase() + fn.substring(1);
+        return fn;
     }
 
 

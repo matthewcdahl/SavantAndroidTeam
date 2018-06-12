@@ -16,6 +16,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.savant.savantandroidteam.MainActivity;
 import com.savant.savantandroidteam.R;
 import com.savant.savantandroidteam.meetings.MeetingsHostFragment;
@@ -28,6 +33,9 @@ public class ProfileFragment extends Fragment {
     ImageView mImage;
 
     FirebaseAuth mAuth;
+    FirebaseDatabase db;
+    DatabaseReference mUsersRef;
+    DatabaseReference mUserRef;
 
     @Nullable
     @Override
@@ -37,6 +45,10 @@ public class ProfileFragment extends Fragment {
         ((MainActivity)getActivity()).setUpToolbar("Profile");
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance();
+        mUsersRef = db.getReference("users");
+        mUserRef = mUsersRef.child(getModifiedEmail());
+
         mName = (TextView) view.findViewById(R.id.profile_name);
         mEmail = (TextView) view.findViewById(R.id.profile_email);
         mImage = (ImageView) view.findViewById(R.id.profile_img);
@@ -60,17 +72,38 @@ public class ProfileFragment extends Fragment {
 
 
 
+
+
         return view;
     }
 
     private void setInfo(){
+        mUserRef.addValueEventListener(new ValueEventListener() {
+
+
+            //Not Working
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+               Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+               for(DataSnapshot id: iter){
+                   if(id.getKey().equals("picture")){
+                       mImage.setImageResource(mThumbIds[Integer.parseInt(id.getValue().toString())]);
+                       break;
+                   }
+
+                   else mImage.setImageResource(mThumbIds[15]);
+               }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
         String name = getName();
         String email = getEmail();
-        int image = mThumbIds[getImage()];
 
         mName.setText(name);
         mEmail.setText(email);
-        mImage.setImageResource(image);
     }
 
     private String getName(){
@@ -84,10 +117,6 @@ public class ProfileFragment extends Fragment {
 
     private String getEmail(){
         return mAuth.getCurrentUser().getEmail();
-    }
-    private int getImage(){
-        SharedPreferences prefs = getContext().getSharedPreferences("Profile", Context.MODE_PRIVATE);
-        return prefs.getInt("pictureID", 15);
     }
 
 
@@ -110,6 +139,10 @@ public class ProfileFragment extends Fragment {
             R.drawable.profile_icon_46, R.drawable.profile_icon_47, R.drawable.profile_icon_48,
             R.drawable.profile_icon_49, R.drawable.profile_icon_50
     };
+
+    private String getModifiedEmail(){
+        return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
+    }
 
 
 }

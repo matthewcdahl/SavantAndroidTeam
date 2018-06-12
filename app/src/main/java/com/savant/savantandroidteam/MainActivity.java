@@ -25,8 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.savant.savantandroidteam.meetings.MeetingsMainFragment;
 import com.savant.savantandroidteam.poker.PokerMainFragment;
 import com.savant.savantandroidteam.profile.ProfileFragment;
@@ -47,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FirebaseDatabase mDatabase;
     DatabaseReference mRootRef;
     DatabaseReference mUserRef;
+    public String imageID;
 
 
 
@@ -63,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDatabase = FirebaseDatabase.getInstance();
         mRootRef = mDatabase.getReference("users");
         mUserRef = mRootRef.child(getModifiedEmail());
-
+        addUserToDatabase();
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         setUpToolbar("Savant Android Wiki Links");
@@ -72,6 +78,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GettingStartedFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_getting_started);
         }
+
+        mUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
+                for(DataSnapshot id: iter){
+                    if(id.getKey().equals("picture")){
+                        setProfilePic(id.getValue().toString());
+                    }
+                    else setProfilePic("15");
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
 
     }
 
@@ -178,9 +202,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         String fullName = getFullName();
         String email = getEmail();
-        int img = getProfileImage();
 
-        profileImage.setImageResource(img);
+
         userNameView.setText(fullName);
         emailView.setText(email);
 
@@ -204,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //Returns the users Email from Firebase
     private String getModifiedEmail(){
-        return mAuth.getCurrentUser().getEmail().trim().replace('.','*');
+        return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }
 
     //Phone back button pressed will not work except to close drawer
@@ -218,12 +241,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else{}
     }
 
-    private int getProfileImage(){
-        SharedPreferences prefs = getSharedPreferences("Profile", MODE_PRIVATE);
-        int rtn = prefs.getInt("pictureID", 15);
-        return mThumbIds[rtn];
-
-    }
 
     private Integer[] mThumbIds = {
             R.drawable.profile_icon_1, R.drawable.profile_icon_2, R.drawable.profile_icon_3,
@@ -244,6 +261,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             R.drawable.profile_icon_46, R.drawable.profile_icon_47, R.drawable.profile_icon_48,
             R.drawable.profile_icon_49, R.drawable.profile_icon_50
     };
+
+    private void addUserToDatabase(){
+        mUserRef.child("name").setValue(getFullName());
+        mUserRef.child("email").setValue(getEmail());
+    }
+
+    private void setProfilePic(String picId){
+        navView = (NavigationView) findViewById(R.id.nav_view);
+        View hView = navView.getHeaderView(0);
+        ImageView profileImage = (ImageView) hView.findViewById(R.id.iv_image);
+        profileImage.setImageResource(mThumbIds[Integer.parseInt(picId)]);
+    }
 
 
 

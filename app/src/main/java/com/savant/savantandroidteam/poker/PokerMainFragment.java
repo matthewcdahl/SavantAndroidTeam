@@ -107,10 +107,8 @@ public class PokerMainFragment extends Fragment {
     //Recycler view adapting
     private void addSessionsToView(){
         sessionItems = mPokerHomebase.getSessions();
-
-       adapter = new PokerAdapter(sessionItems, getContext());
-       mRecyclerView.setAdapter(adapter);
-
+        adapter = new PokerAdapter(sessionItems, getContext());
+        mRecyclerView.setAdapter(adapter);
     }
 
     private void addSession(){

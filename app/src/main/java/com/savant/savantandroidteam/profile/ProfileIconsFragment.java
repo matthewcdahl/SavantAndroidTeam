@@ -26,6 +26,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.savant.savantandroidteam.GettingStartedFragment;
 import com.savant.savantandroidteam.MainActivity;
 import com.savant.savantandroidteam.R;
@@ -34,6 +37,12 @@ public class ProfileIconsFragment extends Fragment {
 
     GridView gridView;
     private NavigationView navView;
+
+    //Firebase
+    FirebaseAuth mAuth;
+    FirebaseDatabase database;
+    DatabaseReference mUsersRef;
+    DatabaseReference mUserRef;
 
     //TOOLBAR
     private ActionBar masterBarHolder;
@@ -46,6 +55,10 @@ public class ProfileIconsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_icons, container, false);
         ((MainActivity) getActivity()).setTitle("Select Icon");
 
+        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        mUsersRef = database.getReference("users");
+        mUserRef = mUsersRef.child(getModifiedEmail());
 
         //TOOLBAR
         masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
@@ -71,9 +84,10 @@ public class ProfileIconsFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SharedPreferences.Editor prefs = getContext().getSharedPreferences("Profile", Context.MODE_PRIVATE).edit();
-                prefs.putInt("pictureID", position);
-                prefs.apply();
+                mUserRef.child("picture").setValue(Integer.toString(position));
+                //SharedPreferences.Editor prefs = getContext().getSharedPreferences("Profile", Context.MODE_PRIVATE).edit();
+                //prefs.putInt("pictureID", position);
+                //prefs.apply();
                 setHeaderInfo(position);
                 ProfileFragment fragment = new ProfileFragment();
                 final FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -123,4 +137,8 @@ public class ProfileIconsFragment extends Fragment {
             R.drawable.profile_icon_46, R.drawable.profile_icon_47, R.drawable.profile_icon_48,
             R.drawable.profile_icon_49, R.drawable.profile_icon_50
     };
+
+    private String getModifiedEmail(){
+        return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
+    }
 }

@@ -46,26 +46,14 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/results_names"
-            android:layout_width="wrap_content"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll1"
-            android:layout_marginTop="30dp"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp" />
+            android:layout_marginTop="10dp">
 
-
-        <TextView
-            android:id="@+id/results_animals"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ll1"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_toRightOf="@id/results_names"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp" />
+        </android.support.v7.widget.RecyclerView>
 
 
         <Button
@@ -83,9 +71,9 @@
             android:layout_height="250dp"
             android:layout_below="@id/ll1"
             android:layout_margin="15dp"
-            android:background="#f4f4f4"
+            android:background="@drawable/submit_poker_host_btn"
             android:padding="10dp"
-            android:textSize="20sp" />
+            android:textSize="20sp"/>
 
 
     </RelativeLayout>
