@@ -104,8 +104,6 @@ public class PokerResultsFragment extends Fragment {
 
 
         //UI
-        nameTextView = (TextView) view.findViewById(R.id.results_names);
-        animalTextView = (TextView) view.findViewById(R.id.results_animals);
         mDeleteButton = (Button) view.findViewById(R.id.delete_session_btn);
         mDeleteButton.setVisibility(View.GONE);
         sessionName = (TextView) view.findViewById(R.id.session_name_results);

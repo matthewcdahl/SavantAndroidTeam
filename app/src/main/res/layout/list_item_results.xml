@@ -1,51 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list_item_test"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:layout_marginTop="0dp"
-    android:orientation="horizontal">
+    android:layout_height="70dp"
+    android:orientation="vertical"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
+    android:paddingBottom="2dp">
 
 
-    <ImageView
-        android:id="@+id/result_image"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.2"/>
     <LinearLayout
-        android:id="@+id/ll1"
-        android:layout_width="0dp"
+
+        android:id="@+id/list_item_test"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.8"
+        android:layout_marginTop="0dp"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_name_result"
+
+        <ImageView
+            android:id="@+id/result_image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.7"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            android:text="holder"
-            android:gravity="left|center_vertical"
-            android:layout_marginLeft="10dp"/>
+            android:layout_weight="0.2"
+            android:layout_marginTop="3dp"/>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="fill_parent"
-            android:background="#FFFFFF" />
-
-        <TextView
-            android:id="@+id/tv_result_result"
+        <LinearLayout
+            android:id="@+id/ll1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.3"
-            android:textSize="18sp"
-            android:text="Elephant"
-            android:textColor="#FFFFFF"
-            android:gravity="center"/>
+            android:layout_weight="0.8"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_name_result"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="0.62"
+                android:gravity="left|center_vertical"
+                android:text="holder"
+                android:textColor="#FFFFFF"
+                android:textSize="23sp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_result_result"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.38"
+                android:gravity="center"
+                android:text="Elephant"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFFFFF" />
 
 </LinearLayout>
