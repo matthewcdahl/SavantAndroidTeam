@@ -1,6 +1,8 @@
 package com.savant.savantandroidteam.poker;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -73,6 +75,7 @@ public class PokerResultsFragment extends Fragment {
 
     private ActionBar masterBarHolder;
     Toolbar toolbar;
+    boolean dialogIsOpen;
 
 
     Animation openConversion;
@@ -89,6 +92,7 @@ public class PokerResultsFragment extends Fragment {
 
         openConversion = AnimationUtils.loadAnimation(getContext(), R.anim.conversion_open);
         closeConversion = AnimationUtils.loadAnimation(getContext(), R.anim.conversion_close);
+        dialogIsOpen = false;
 
         //TOOLBAR
         masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
@@ -131,7 +135,6 @@ public class PokerResultsFragment extends Fragment {
         mRootRef = mDatabase.getReference();
 
 
-
         //Firebase listener
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -143,7 +146,7 @@ public class PokerResultsFragment extends Fragment {
                         addSessionsToView();
                         setName();
 
-                    } else if(isRevealedPos == -1) {// This will happen when the session has been deleted
+                    } else if (isRevealedPos == -1) {// This will happen when the session has been deleted
                         AppCompatActivity activity = (AppCompatActivity) view.getContext();
                         PokerMainFragment fragment = new PokerMainFragment();
                         FragmentManager fm = activity.getSupportFragmentManager();
@@ -153,8 +156,10 @@ public class PokerResultsFragment extends Fragment {
                     }
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
 //        mDeleteButton.setOnClickListener(new View.OnClickListener() {
@@ -169,13 +174,12 @@ public class PokerResultsFragment extends Fragment {
         infoImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isVisible) {
+                if (!isVisible) {
                     conversionText.startAnimation(openConversion);
                     isVisible = true;
                     conversionText.setVisibility(View.VISIBLE);
                     infoImage.setImageResource(R.drawable.ic_close_black_24dp);
-                }
-                else {
+                } else {
                     isVisible = false;
                     conversionText.startAnimation(closeConversion);
                     conversionText.setVisibility(View.GONE);
@@ -189,20 +193,18 @@ public class PokerResultsFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.poker_results_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.delete_session_menu_item:
                 goToMain(getView());
                 deleteSession();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -226,9 +228,6 @@ public class PokerResultsFragment extends Fragment {
     }
 
 
-
-
-
     //remove session from firebase and listeners should take care of the rest
     private void deleteSession() {
         String id = getSession();
@@ -245,14 +244,13 @@ public class PokerResultsFragment extends Fragment {
     }
 
 
-
     //name of the session
     private void setName() {
         String name = newHomebase.getResultSessionName(getSession());
         sessionName.setText(name);
     }
 
-    private void addSessionsToView(){
+    private void addSessionsToView() {
         resultItems = newHomebase.getResults();
         //Log.d("ayyyyayay", resultItems.get(0).getName());
         //Log.d("MatthewCDahl", resultItems.get(0).getPicId());
