@@ -172,13 +172,13 @@ public class PokerUserFragment extends Fragment {
     private void submitDiff(){
         String diff = mDiff.getText().toString();
         if(diff.isEmpty()) diff = "0";
-        String userEmail = mAuth.getCurrentUser().getEmail();
-        for(int i = 0; i<userEmail.length(); i++){
+        String userEmail = getModifiedEmail();
+        /*for(int i = 0; i<userEmail.length(); i++){
             if(userEmail.charAt(i) == '.'){
                 userEmail = userEmail.substring(0, i);
             }
         }
-        userEmail = userEmail.substring(0, 1).toUpperCase() + userEmail.substring(1);
+        userEmail = userEmail.substring(0, 1).toUpperCase() + userEmail.substring(1);*/
         DatabaseReference userRef = mCurrentSession.child("responses");
         userRef.child(userEmail).setValue(diff);
 
@@ -213,6 +213,10 @@ public class PokerUserFragment extends Fragment {
         Bundle arguments = getArguments();
         String name = arguments.getString("NAME");
         return name;
+    }
+
+    private String getModifiedEmail(){
+        return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }
 
 

@@ -82,15 +82,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         mUserRef.addValueEventListener(new ValueEventListener() {
+
+            boolean proPicSet = false;
+            boolean nicknameSet = false;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> iter = dataSnapshot.getChildren();
                 for(DataSnapshot id: iter){
                     if(id.getKey().equals("picture")){
                         setProfilePic(id.getValue().toString());
+                        proPicSet = true;
                     }
-                    else setProfilePic("15");
+                    else if(id.getKey().equals("nickname")){
+                        setNickname(id.getValue().toString());
+                        nicknameSet = true;
+                    }
                 }
+                if(!proPicSet) setProfilePic("15");
+                if(!nicknameSet) setNickname(getFirstName());
 
 
             }
@@ -206,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String email = getEmail();
 
 
-        userNameView.setText(fullName);
+        //userNameView.setText(fullName); the fullname is set in the nickname listener
         emailView.setText(email);
 
     }
@@ -220,6 +229,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String last = email.substring(email.indexOf(".")+1, email.indexOf('@'));
         String lastName = last.substring(0, 1).toUpperCase() + last.substring(1);
         return firstName + " " + lastName;
+    }
+
+    private String getFirstName(){
+        String email = mAuth.getCurrentUser().getEmail();
+        String first = email.substring(0, email.indexOf("."));
+        String firstName = first.substring(0, 1).toUpperCase() + first.substring(1);
+        return firstName;
     }
 
     //Returns the users Email from Firebase
@@ -276,6 +292,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View hView = navView.getHeaderView(0);
         ImageView profileImage = (ImageView) hView.findViewById(R.id.iv_image);
         profileImage.setImageResource(mThumbIds[Integer.parseInt(picId)]);
+    }
+
+    private void setNickname(String nickname){
+        navView = (NavigationView) findViewById(R.id.nav_view);
+        View hView = navView.getHeaderView(0);
+        TextView name = (TextView) hView.findViewById(R.id.tv_name_drawer_header);
+        String currName = getFullName();
+        String holder = currName + " (" + nickname + ")";
+        name.setText(holder);
     }
 
 

@@ -15,6 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -50,7 +53,6 @@ public class PokerResultsFragment extends Fragment {
     TextView animalTextView;
     TextView sessionName;
     TextView conversionText;
-    Button mDeleteButton;
     ImageView infoImage;
     private boolean isVisible;
     private RecyclerView.Adapter adapter;
@@ -81,6 +83,7 @@ public class PokerResultsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         final View view = inflater.inflate(R.layout.fragment_poker_results_new, container, false);
+        setHasOptionsMenu(true);
 
         ((MainActivity) getActivity()).setTitle("Session Results");
 
@@ -104,8 +107,6 @@ public class PokerResultsFragment extends Fragment {
 
 
         //UI
-        mDeleteButton = (Button) view.findViewById(R.id.delete_session_btn);
-        mDeleteButton.setVisibility(View.GONE);
         sessionName = (TextView) view.findViewById(R.id.session_name_results);
         conversionText = (TextView) view.findViewById(R.id.conversion_box);
         conversionText.setVisibility(View.GONE);
@@ -141,7 +142,6 @@ public class PokerResultsFragment extends Fragment {
                     if (newHomebase.isRevealed(isRevealedPos)) {//if the session has not been deleted
                         addSessionsToView();
                         setName();
-                        initializeDeletButton();
 
                     } else if(isRevealedPos == -1) {// This will happen when the session has been deleted
                         AppCompatActivity activity = (AppCompatActivity) view.getContext();
@@ -157,13 +157,13 @@ public class PokerResultsFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) {}
         });
 
-        mDeleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToMain(v);
-                deleteSession();
-            }
-        });
+//        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                goToMain(v);
+//                deleteSession();
+//            }
+//        });
 
         //Conversion Chart
         infoImage.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +186,24 @@ public class PokerResultsFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.poker_results_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        switch (item.getItemId()){
+            case R.id.delete_session_menu_item:
+                goToMain(getView());
+                deleteSession();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -226,12 +244,7 @@ public class PokerResultsFragment extends Fragment {
         ft.commit();
     }
 
-    //Will only show the delete button if they are the host
-    private void initializeDeletButton() {
-        if (!newHomebase.isHostOfSessionDelete(getSession())) {
-            mDeleteButton.setVisibility(View.GONE);
-        } else mDeleteButton.setVisibility(View.VISIBLE);
-    }
+
 
     //name of the session
     private void setName() {

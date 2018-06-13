@@ -18,8 +18,10 @@
             android:title="Sprint Meetings" />
     </group>
 
+
     <item android:title="Account">
         <menu>
+            <group android:checkableBehavior="single">
             <item
                 android:id="@+id/nav_profile"
                 android:icon="@drawable/ic_person_outline_black_24dp"
@@ -28,6 +30,7 @@
                 android:id="@+id/nav_log_out"
                 android:icon="@drawable/ic_log_out"
                 android:title="Log Out" />
+            </group>
         </menu>
     </item>
 

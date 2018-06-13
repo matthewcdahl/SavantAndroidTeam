@@ -152,6 +152,7 @@ public class PokerResultsHomebase {
 
 
 
+
     private int getIdPos(int pos){
 
         List<SessionItem> list = getSessions();
@@ -180,7 +181,7 @@ public class PokerResultsHomebase {
 
         for(DataSnapshot child: children) {
             ResultItem toAdd = new ResultItem();
-            toAdd.setName(child.getKey());
+            toAdd.setName(getNickname(child.getKey()));
             toAdd.setResult(child.getValue().toString());
             toAdd.setPicId(getUserPicture(child.getKey()));
 
@@ -197,7 +198,7 @@ public class PokerResultsHomebase {
         Iterable<DataSnapshot> iter = userRef.getChildren();
 
         for(DataSnapshot child: iter){
-            if(name.equals(extractName(child.getKey()))){
+            if(name.equals(child.getKey())){
                 Iterable<DataSnapshot> iter2 = child.getChildren();
                 for(DataSnapshot child2: iter2){
                     if(child2.getKey().equals("picture")){
@@ -208,6 +209,22 @@ public class PokerResultsHomebase {
         }
 
         return "15";
+    }
+
+    private String getNickname(String email){
+        DataSnapshot userRef = mUsersSnapshot;
+        Iterable<DataSnapshot> iter = userRef.getChildren();
+        for(DataSnapshot child: iter){
+            if(email.equals(child.getKey())){
+                Iterable<DataSnapshot> iter2 = child.getChildren();
+                for(DataSnapshot child2: iter2){
+                    if(child2.getKey().equals("nickname")){
+                        return child2.getValue().toString();
+                    }
+                }
+            }
+        }
+        return getUserName();
     }
 
 

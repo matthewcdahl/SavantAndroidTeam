@@ -41,20 +41,27 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NAME: "
+            android:text="NICKNAME: "
+            android:textColor="#71a4f7"
             android:textSize="13dp"/>
 
-        <TextView
-            android:id="@+id/profile_name"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/et_profile_nickName"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Matthew Dahl"
+            android:text="Loading..."
             android:textColor="#000000"
+            android:layout_marginLeft="7dp"
             android:textSize="20dp"
-            android:layout_marginLeft="7dp"/>
+            android:background="#FFFFFF"
+            android:maxLines="1"
+            android:inputType="text|textNoSuggestions"
+            android:imeOptions="actionDone"/>
 
 
     </LinearLayout>
+
+
 
     <View
         android:id="@+id/divide2"
@@ -76,17 +83,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="EMAIL: "
+            android:text="NAME: "
             android:textSize="13dp"/>
 
         <TextView
-            android:id="@+id/profile_email"
+            android:id="@+id/profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="matthew.dahl@savant.com"
+            android:text="Loading..."
             android:textColor="#000000"
-            android:layout_marginLeft="7dp"
-            android:textSize="16dp" />
+            android:textSize="20dp"
+            android:layout_marginLeft="7dp"/>
 
 
     </LinearLayout>
@@ -98,6 +105,42 @@
         android:background="@android:color/darker_gray"
         android:layout_below="@id/ll2"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll3"
+        android:orientation="horizontal"
+        android:layout_below="@id/divide3"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EMAIL: "
+            android:textSize="13dp"/>
+
+        <TextView
+            android:id="@+id/profile_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading..."
+            android:textColor="#000000"
+            android:layout_marginLeft="7dp"
+            android:textSize="16dp" />
+
+
+    </LinearLayout>
+
+
+    <View
+        android:id="@+id/divide4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_below="@id/ll3"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -105,7 +148,7 @@
         android:textSize="15sp"
         android:textColor="#000000"
         android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true" />
 
 
 </RelativeLayout>
