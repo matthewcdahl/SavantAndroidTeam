@@ -228,6 +228,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Returns the users Email from Firebase
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
+        //TESTER comments
+        //hi
     }
 
     //Phone back button pressed will not work except to close drawer
