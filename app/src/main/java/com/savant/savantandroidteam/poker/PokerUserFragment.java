@@ -81,6 +81,14 @@ public class PokerUserFragment extends Fragment {
 
         mDiff = (EditText) view.findViewById(R.id.et_difficulty_user);
         mDiff.setText(getSessionDIFF());
+        mDiff.setCursorVisible(false);
+
+        mDiff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDiff.setCursorVisible(true);
+            }
+        });
 
         mWaitingText = (TextView) view.findViewById(R.id.tv_waiting);
         waitingText();
@@ -170,6 +178,7 @@ public class PokerUserFragment extends Fragment {
 
     //Pushes the users name and response to firebase in the form of Key: First name, Value: Response
     private void submitDiff(){
+        mDiff.setCursorVisible(false);
         String diff = mDiff.getText().toString();
         if(diff.isEmpty()) diff = "0";
         String userEmail = getModifiedEmail();

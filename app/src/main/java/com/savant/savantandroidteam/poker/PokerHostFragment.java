@@ -20,6 +20,7 @@ package com.savant.savantandroidteam.poker;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -238,12 +239,6 @@ public class PokerHostFragment extends Fragment {
         String diff = mDiff.getText().toString();
         if(diff.isEmpty()) diff = "0";
         String userEmail = getModifiedEmail();
-        /*for(int i = 0; i<userEmail.length(); i++){
-            if(userEmail.charAt(i) == '.'){
-                userEmail = userEmail.substring(0, i);
-            }
-        }
-        userEmail = userEmail.substring(0, 1).toUpperCase() + userEmail.substring(1);*/
         DatabaseReference userRef = mCurrentSession.child("responses");
         userRef.child(userEmail).setValue(diff);
 

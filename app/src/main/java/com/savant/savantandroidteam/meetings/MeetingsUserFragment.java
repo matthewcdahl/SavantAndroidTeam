@@ -144,26 +144,7 @@ public class MeetingsUserFragment extends Fragment {
     }
 
     private void deleteMeeting(){
-        isDeleted = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Delete Meeting");
-        builder.setMessage("Are you sure you want to delete this meeting?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialogIsOpen = false;
-                mMeetingHomebase.deleteMeeting(getPosition());
-            }
-        });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialogIsOpen = false;
-            }
-        });
-        builder.show();
-        dialogIsOpen = true;
-
+        mMeetingHomebase.deleteMeeting(getPosition());
     }
 
     private void editMeeting(){
