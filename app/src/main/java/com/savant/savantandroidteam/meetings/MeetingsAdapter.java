@@ -1,6 +1,7 @@
 package com.savant.savantandroidteam.meetings;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager;

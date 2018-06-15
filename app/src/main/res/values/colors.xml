@@ -8,4 +8,5 @@
     <color name="pokerSessionClosed">#d37e88</color>
     <color name="sprintMeetingUpcoming">#5b89e5</color>
     <color name="sprintMeetingOver">#e5a95b</color>
+    <color name="swipeDeleteBack">#ef4c4c</color>
 </resources>

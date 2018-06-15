@@ -294,7 +294,7 @@ public class PokerHomebase {
         return false;
     }
 
-    private int getIdPos(int pos){
+    public int getIdPos(int pos){
 
         List<SessionItem> list = getSessions();
 

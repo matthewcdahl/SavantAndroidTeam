@@ -2,13 +2,20 @@ package com.savant.savantandroidteam.meetings;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,7 +45,6 @@ public class MeetingsMainFragment extends Fragment {
     private FirebaseAuth mAuth;
 
 
-
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
     private List<MeetingItem> meetingItems;
@@ -54,7 +60,7 @@ public class MeetingsMainFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_meetings_main, container, false);
 
-        ((MainActivity)getActivity()).setUpToolbar("Meetings");
+        ((MainActivity) getActivity()).setUpToolbar("Meetings");
 
 
         mDatabase = FirebaseDatabase.getInstance();
@@ -68,7 +74,6 @@ public class MeetingsMainFragment extends Fragment {
 
         mNoCurrentText = (TextView) view.findViewById(R.id.no_current_sessions);
         mClickPlusText = (TextView) view.findViewById(R.id.press_plus);
-
 
 
         mMeetingsRef.addValueEventListener(new ValueEventListener() {
@@ -86,19 +91,18 @@ public class MeetingsMainFragment extends Fragment {
         });
 
 
-
         return view;
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.meetings_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.add_meeting:
                 addMeeting();
 
@@ -108,21 +112,102 @@ public class MeetingsMainFragment extends Fragment {
     }
 
     //DataSnapshot { key = 1, value = {host=Matthew, name=m, responses={Matthew=2}} }
-    private void addMeetingsToView(){
+    private void addMeetingsToView() {
+        meetingItems = mMeetingsHomebase.getMeetings();
+        adapter = new MeetingsAdapter(meetingItems, getContext());
+        mRecyclerView.setAdapter(adapter);
 
-       meetingItems = mMeetingsHomebase.getMeetings();
-       adapter = new MeetingsAdapter(meetingItems, getContext());
-       mRecyclerView.setAdapter(adapter);
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //mMeetingsHomebase.deleteMeeting();
+                mMeetingsHomebase.deleteMeeting(viewHolder.getAdapterPosition());
+                Toast.makeText(getContext(), "Meeting Deleted", Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                /*if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Get RecyclerView item from the ViewHolder
+                    View itemView = viewHolder.itemView;
+
+                    Paint p = new Paint();
+                    p.setColor(getContext().getResources().getColor(R.color.red));
+                    if (dX > 0) {
+                        *//* Set your color for positive displacement *//*
+
+                        // Draw Rect with varying right side, equal to displacement dX
+                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                                (float) itemView.getBottom(), p);
+                    } else {
+                        *//* Set your color for negative displacement *//*
+
+                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
+                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                    }
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }*/
+                final float ALPHA_FULL = 1.0f;
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Get RecyclerView item from the ViewHolder
+                    View itemView = viewHolder.itemView;
+
+                    Paint p = new Paint();
+                    Bitmap icon;
+
+
+                    icon = BitmapFactory.decodeResource(
+                            getContext().getResources(), R.drawable.baseline_delete_sweep_black_36dp);
+
+                    /* Set your color for negative displacement */
+                    p.setColor(getResources().getColor(R.color.swipeDeleteBack));
+
+                    // Draw Rect with varying left side, equal to the item's right side
+                    // plus negative displacement dX
+                    c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                            (float) itemView.getRight(), (float) itemView.getBottom(), p);
+
+                    //Set the image icon for Left swipe
+                    c.drawBitmap(icon,
+                            (float) itemView.getRight() - convertDpToPx(16) - icon.getWidth(),
+                            (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight()) / 2,
+                            p);
+
+
+                    // Fade out the view as it is swiped out of the parent's bounds
+                    final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
+                    viewHolder.itemView.setAlpha(alpha);
+                    viewHolder.itemView.setTranslationX(dX);
+
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+            }
+        }).attachToRecyclerView(mRecyclerView);
 
     }
 
-    private void addMeeting(){
+    private int convertDpToPx(int dp) {
+        return Math.round(dp * (getResources().getDisplayMetrics().xdpi / DisplayMetrics.DENSITY_DEFAULT));
+    }
+
+
+    private void addMeeting() {
 
         startMeeting();
     }
 
 
-    private void startMeeting(/*String id, String name*/){
+    private void startMeeting(/*String id, String name*/) {
 
         SharedPreferences.Editor edit = getContext().getSharedPreferences("MeetingPrefsExtra", Context.MODE_PRIVATE).edit();
         edit.putString("isEdited", "false");
@@ -138,18 +223,15 @@ public class MeetingsMainFragment extends Fragment {
         ft.addToBackStack(null).commit();
     }
 
-    private void setStartText(){
-        if(mMeetingsHomebase.getNumberOfSessions() == 0){
+    private void setStartText() {
+        if (mMeetingsHomebase.getNumberOfSessions() == 0) {
             mNoCurrentText.setVisibility(View.VISIBLE);
             mClickPlusText.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             mNoCurrentText.setVisibility(View.GONE);
             mClickPlusText.setVisibility(View.GONE);
         }
     }
-
-
 
 
 }

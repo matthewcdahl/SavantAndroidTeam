@@ -27,6 +27,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -232,6 +233,8 @@ public class PokerResultsFragment extends Fragment {
     private void deleteSession() {
         String id = getSession();
         newHomebase.removeSession(id);
+        Toast.makeText(getContext(), "Session Deleted", Toast.LENGTH_LONG).show();
+
     }
 
     //return to main fragment

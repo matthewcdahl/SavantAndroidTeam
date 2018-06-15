@@ -1,5 +1,9 @@
 package com.savant.savantandroidteam.poker;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -7,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -105,10 +111,97 @@ public class PokerMainFragment extends Fragment {
     }
 
     //Recycler view adapting
-    private void addSessionsToView(DataSnapshot ss){
+    private void addSessionsToView(final DataSnapshot ss){
         sessionItems = mPokerHomebase.getSessions();
         adapter = new PokerAdapter(sessionItems, getContext(), ss);
         mRecyclerView.setAdapter(adapter);
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                //mMeetingsHomebase.deleteMeeting();
+                if(mPokerHomebase.isRevealed(viewHolder.getAdapterPosition())){
+                    mPokerHomebase.removeSession(Integer.toString(mPokerHomebase.getIdPos(viewHolder.getAdapterPosition())));
+                    Toast.makeText(getContext(), "Session Deleted", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getContext(), "Can only delete CLOSED sessions!", Toast.LENGTH_LONG).show();
+                    addSessionsToView(ss);
+                }
+
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                /*if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Get RecyclerView item from the ViewHolder
+                    View itemView = viewHolder.itemView;
+
+                    Paint p = new Paint();
+                    p.setColor(getContext().getResources().getColor(R.color.red));
+                    if (dX > 0) {
+                        *//* Set your color for positive displacement *//*
+
+                        // Draw Rect with varying right side, equal to displacement dX
+                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                                (float) itemView.getBottom(), p);
+                    } else {
+                        *//* Set your color for negative displacement *//*
+
+                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
+                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                    }
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }*/
+                final float ALPHA_FULL = 1.0f;
+
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Get RecyclerView item from the ViewHolder
+                    View itemView = viewHolder.itemView;
+
+                    Paint p = new Paint();
+                    Bitmap icon;
+
+
+                    icon = BitmapFactory.decodeResource(
+                            getContext().getResources(), R.drawable.baseline_delete_sweep_black_36dp);
+
+                    /* Set your color for negative displacement */
+                    p.setColor(getResources().getColor(R.color.swipeDeleteBack));
+
+                    // Draw Rect with varying left side, equal to the item's right side
+                    // plus negative displacement dX
+                    c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                            (float) itemView.getRight(), (float) itemView.getBottom(), p);
+
+                    //Set the image icon for Left swipe
+                    c.drawBitmap(icon,
+                            (float) itemView.getRight() - convertDpToPx(16) - icon.getWidth(),
+                            (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight()) / 2,
+                            p);
+
+
+                    // Fade out the view as it is swiped out of the parent's bounds
+                    final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
+                    viewHolder.itemView.setAlpha(alpha);
+                    viewHolder.itemView.setTranslationX(dX);
+
+                } else {
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+            }
+        }).attachToRecyclerView(mRecyclerView);
+    }
+
+    private int convertDpToPx(int dp) {
+        return Math.round(dp * (getResources().getDisplayMetrics().xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
     private void addSession(){
