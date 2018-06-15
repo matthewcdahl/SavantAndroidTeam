@@ -1,6 +1,7 @@
 package com.savant.savantandroidteam.meetings;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,11 +68,27 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         String status;
         Log.d("DATEiii", listItem.getDate());
         if (meetingDateHasPassed(listItem.getDate(), listItem.getTime())) {
-            status = "Passed";
+            status = "PASSED";
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.sprintMeetingOver));
         } else {
-            status = "Upcoming";
+            status = "UPCOMING";
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.sprintMeetingUpcoming));
+        }
+
+        Resources r = context.getResources();
+        int px6 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
+        int px3 = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, r.getDisplayMetrics());
+
+
+        if(listItems.size() == 1){
+            setMargins(holder.linearLayout, 0,px6,0,px6);
+        }
+        else if(position == 0){
+            setMargins(holder.linearLayout, 0,px6,0,px3);
+
+        }
+        else if(position == getItemCount()-1){
+            setMargins(holder.linearLayout, 0,px3,0,px6);
         }
 
         holder.id.setText(listItem.getDate() + " " + listItem.getTime());
@@ -84,6 +102,14 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         });
 
 
+    }
+
+    private void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
     }
 
     @Override

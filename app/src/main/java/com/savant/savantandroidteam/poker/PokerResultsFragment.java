@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,16 +53,14 @@ import java.util.List;
 public class PokerResultsFragment extends Fragment {
 
     //UI
-    TextView nameTextView;
-    TextView animalTextView;
     TextView sessionName;
     TextView conversionText;
-    ImageView infoImage;
+
     private boolean isVisible;
     private RecyclerView.Adapter adapter;
     private List<ResultItem> resultItems;
-    private List<Tuple> resultPics;
     private RecyclerView mRecyclerView;
+    private RelativeLayout mRelativeLayout;
 
 
     //Firebase
@@ -72,7 +71,6 @@ public class PokerResultsFragment extends Fragment {
     private DatabaseReference mCurrentResults;
     private DatabaseReference mRootRef;
     private PokerResultsHomebase newHomebase;
-    private PokerHomebase pictureHomebase;
 
     private ActionBar masterBarHolder;
     Toolbar toolbar;
@@ -109,6 +107,7 @@ public class PokerResultsFragment extends Fragment {
                         .replace(R.id.fragment_container, new PokerMainFragment()).commit();
             }
         });
+        mRelativeLayout = view.findViewById(R.id.results_page_rl);
 
 
         //UI
@@ -121,7 +120,6 @@ public class PokerResultsFragment extends Fragment {
                 "Buffalo: 8\nElephant: 13\n" +
                 "HoneyBadger: 21";
         conversionText.setText(animalsToSet);
-        infoImage = (ImageView) view.findViewById(R.id.info_image_btn);
         isVisible = false;
         mRecyclerView = view.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -163,32 +161,23 @@ public class PokerResultsFragment extends Fragment {
             }
         });
 
-//        mDeleteButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                goToMain(v);
-//                deleteSession();
-//            }
-//        });
-
-        //Conversion Chart
-        infoImage.setOnClickListener(new View.OnClickListener() {
+        conversionText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isVisible) {
-                    conversionText.startAnimation(openConversion);
-                    isVisible = true;
-                    conversionText.setVisibility(View.VISIBLE);
-                    infoImage.setImageResource(R.drawable.ic_close_black_24dp);
-                } else {
-                    isVisible = false;
-                    conversionText.startAnimation(closeConversion);
-                    conversionText.setVisibility(View.GONE);
-                    infoImage.setImageResource(R.drawable.ic_info_outline_white_24dp);
-                }
+
             }
         });
 
+        mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isVisible){
+                    isVisible = false;
+                    conversionText.startAnimation(closeConversion);
+                    conversionText.setVisibility(View.GONE);
+                }
+            }
+        });
 
         return view;
     }
@@ -205,6 +194,19 @@ public class PokerResultsFragment extends Fragment {
             case R.id.delete_session_menu_item:
                 goToMain(getView());
                 deleteSession();
+                break;
+            case R.id.show_info_menu_item:
+                if (!isVisible) {
+                    conversionText.startAnimation(openConversion);
+                    isVisible = true;
+                    conversionText.setVisibility(View.VISIBLE);
+                } else {
+                    isVisible = false;
+                    conversionText.startAnimation(closeConversion);
+                    conversionText.setVisibility(View.GONE);
+                }
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }

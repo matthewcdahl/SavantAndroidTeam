@@ -1,13 +1,17 @@
 package com.savant.savantandroidteam.poker;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -62,11 +66,27 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
 
         if(hb.isRevealed(position)){ // Session is over
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.pokerSessionClosed));
-            sessionStatus = "Closed";
+            sessionStatus = "CLOSED";
         }
         else{ //Session is still going
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.pokerSessionOpen));
-            sessionStatus = "Open";
+            sessionStatus = "OPEN";
+        }
+
+        Resources r = context.getResources();
+        int px6 = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
+        int px3 = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, r.getDisplayMetrics());
+
+
+        if(listItems.size() == 1){
+            setMargins(holder.linearLayout, 0,px6,0,px6);
+        }
+        else if(position == 0){
+            setMargins(holder.linearLayout, 0,px6,0,px3);
+
+        }
+        else if(position == getItemCount()-1){
+            setMargins(holder.linearLayout, 0,px3,0,px6);
         }
 
         holder.host.setText(listItem.getHost());
@@ -77,6 +97,14 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
                 handleClick(position, view);
             }
         });
+    }
+
+    private void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
     }
 
     @Override

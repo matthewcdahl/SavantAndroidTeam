@@ -6,5 +6,10 @@
         android:id="@+id/delete_session_menu_item"
         android:title="Delete Session"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/show_info_menu_item"
+        android:title="Conversion"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_info_outline_white_24dp" />
 
 </menu>
