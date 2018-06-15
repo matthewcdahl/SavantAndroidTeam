@@ -20,9 +20,9 @@
         android:columnWidth="100dp"
         android:gravity="center"
         android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
         android:numColumns="auto_fit"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="10dp"
         android:layout_marginTop="?attr/actionBarSize"/>
 
 

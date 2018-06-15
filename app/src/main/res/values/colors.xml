@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorPokerPrimary">#4286f4</color>
+    <color name="pokerSessionOpen">#7dc48e</color>
+    <color name="pokerSessionClosed">#d37e88</color>
+    <color name="sprintMeetingUpcoming">#5b89e5</color>
+    <color name="sprintMeetingOver">#e5a95b</color>
 </resources>

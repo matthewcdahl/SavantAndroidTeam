@@ -2,6 +2,7 @@ package com.savant.savantandroidteam.profile;
 
 import android.content.Context;
 import android.graphics.Picture;
+import android.os.UserManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,12 +42,13 @@ public class ImageAdapter extends BaseAdapter {
             imageView = new ImageView(mContext);
             imageView.setLayoutParams(new ViewGroup.LayoutParams(300, 300));
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(8, 8, 8, 8);
+            imageView.setPadding(5, 5, 5, 5);
         } else {
             imageView = (ImageView) convertView;
         }
 
         Glide.with(mContext).load(mThumbIds[position]).into(imageView);
+
 
         //imageView.setImageResource(mThumbIds[position]);
         return imageView;

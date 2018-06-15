@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.savant.savantandroidteam.R;
@@ -28,11 +29,12 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
     private String userName;
     private FirebaseDatabase mDB;
     private DatabaseReference mPoker;
-    PokerHomebase hb = new PokerHomebase();
+    PokerHomebase hb;
 
-    public PokerAdapter(List<SessionItem> listItems, Context context) {
+    public PokerAdapter(List<SessionItem> listItems, Context context, DataSnapshot ss) {
         this.listItems = listItems;
         this.context = context;
+        hb = new PokerHomebase(ss);
         mAuth = FirebaseAuth.getInstance();
         userName = mAuth.getCurrentUser().getEmail();
         for(int i = 0; i<userName.length(); i++){
@@ -56,11 +58,19 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final SessionItem listItem = listItems.get(position);
 
+        String sessionStatus;
+
+        if(hb.isRevealed(position)){ // Session is over
+            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.pokerSessionClosed));
+            sessionStatus = "Closed";
+        }
+        else{ //Session is still going
+            holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.pokerSessionOpen));
+            sessionStatus = "Open";
+        }
+
         holder.host.setText(listItem.getHost());
-        holder.name.setText(listItem.getName());
-
-
-
+        holder.name.setText(listItem.getName() + ": " + sessionStatus);
         holder.linearLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(final View view){
@@ -84,6 +94,7 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
             name = (TextView) itemView.findViewById(R.id.tv_name);
             host = (TextView) itemView.findViewById(R.id.tv_host);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_test);
+            //linearLayout.setBackgroundColor(itemView.getResources().getColor(R.color.white));
         }
 
     }

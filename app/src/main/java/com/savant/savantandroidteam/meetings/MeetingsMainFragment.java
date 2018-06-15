@@ -111,7 +111,6 @@ public class MeetingsMainFragment extends Fragment {
     private void addMeetingsToView(){
 
        meetingItems = mMeetingsHomebase.getMeetings();
-
        adapter = new MeetingsAdapter(meetingItems, getContext());
        mRecyclerView.setAdapter(adapter);
 

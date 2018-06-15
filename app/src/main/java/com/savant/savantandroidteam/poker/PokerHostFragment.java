@@ -229,6 +229,11 @@ public class PokerHostFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        mDiff.clearFocus();
+    }
 
     private void submitName(){
         String name = mName.getText().toString();
@@ -241,6 +246,7 @@ public class PokerHostFragment extends Fragment {
         String userEmail = getModifiedEmail();
         DatabaseReference userRef = mCurrentSession.child("responses");
         userRef.child(userEmail).setValue(diff);
+        mDiff.clearFocus();
 
     }
 

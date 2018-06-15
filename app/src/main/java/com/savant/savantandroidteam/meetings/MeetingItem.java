@@ -12,7 +12,7 @@ public class MeetingItem {
     public MeetingItem(){
         name = "Unnamed Meeting";
         desc = "No Description";
-        date = "9/9/9999";
+        date = "9-9-9999";
         time = "11:59 PM";
         id = "0";
         place = "Not Listed";

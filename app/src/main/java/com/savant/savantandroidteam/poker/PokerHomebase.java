@@ -264,11 +264,9 @@ public class PokerHomebase {
     }
 
     public String getResponse(int pos){
-        Log.d("RESPONSES pos", Integer.toString(pos));
         List<SessionItem> list = getSessions();
         ArrayList<Tuple> res = list.get(pos).getResponses();
         for(int i = 0; i<res.size(); i++){
-            Log.d("res.get(i).getName()", res.get(i).getName());
             if(res.get(i).getName().equals(getUserModifiedEmail())) return res.get(i).getResponse();
         }
         return "";

@@ -252,8 +252,6 @@ public class PokerResultsFragment extends Fragment {
 
     private void addSessionsToView() {
         resultItems = newHomebase.getResults();
-        //Log.d("ayyyyayay", resultItems.get(0).getName());
-        //Log.d("MatthewCDahl", resultItems.get(0).getPicId());
         adapter = new PokerResultsAdapter(resultItems, getContext());
         mRecyclerView.setAdapter(adapter);
     }

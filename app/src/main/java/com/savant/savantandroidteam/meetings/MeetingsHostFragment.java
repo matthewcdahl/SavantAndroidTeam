@@ -212,6 +212,7 @@ public class MeetingsHostFragment extends Fragment {
         currMeetingRef.child("time").setValue(time);
         currMeetingRef.child("id").setValue(id);
         currMeetingRef.child("description").setValue(description);
+        
 
     }
 

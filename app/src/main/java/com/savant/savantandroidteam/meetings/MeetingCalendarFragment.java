@@ -54,7 +54,7 @@ public class MeetingCalendarFragment extends Fragment {
         mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String date = month + "-" + dayOfMonth + "-" + year;
+                String date = month+1 + "-" + dayOfMonth + "-" + year;
                 SharedPreferences.Editor prefs = getContext().getSharedPreferences("MeetingPrefs", MODE_PRIVATE).edit();
                 prefs.putString("date", date);
                 prefs.apply();

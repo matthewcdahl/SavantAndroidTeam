@@ -37,7 +37,6 @@ public class PokerResultsAdapter extends RecyclerView.Adapter<PokerResultsAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_item_results, parent, false);
-        Log.d("Better be shown", "!!!!");
 
         return new ViewHolder(view);
     }

@@ -73,6 +73,8 @@ public class MeetingsUserFragment extends Fragment {
             }
         });
 
+        //Abstract toolbar fragment
+
 
         mNameText = (TextView) view.findViewById(R.id.tv_meeting_user_name);
         mPlaceText = (TextView) view.findViewById(R.id.tv_meeting_user_place);

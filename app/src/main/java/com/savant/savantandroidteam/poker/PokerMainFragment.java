@@ -74,7 +74,7 @@ public class PokerMainFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mPokerHomebase = new PokerHomebase(dataSnapshot);
-                addSessionsToView();
+                addSessionsToView(dataSnapshot);
                 setStartText();
             }
             @Override
@@ -105,9 +105,9 @@ public class PokerMainFragment extends Fragment {
     }
 
     //Recycler view adapting
-    private void addSessionsToView(){
+    private void addSessionsToView(DataSnapshot ss){
         sessionItems = mPokerHomebase.getSessions();
-        adapter = new PokerAdapter(sessionItems, getContext());
+        adapter = new PokerAdapter(sessionItems, getContext(), ss);
         mRecyclerView.setAdapter(adapter);
     }
 
