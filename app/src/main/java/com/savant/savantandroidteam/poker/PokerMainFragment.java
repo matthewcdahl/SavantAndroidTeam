@@ -125,41 +125,22 @@ public class PokerMainFragment extends Fragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 //mMeetingsHomebase.deleteMeeting();
+                System.out.println(viewHolder.getAdapterPosition());
                 if(mPokerHomebase.isRevealed(viewHolder.getAdapterPosition())){
                     mPokerHomebase.removeSession(Integer.toString(mPokerHomebase.getIdPos(viewHolder.getAdapterPosition())));
+                    addSessionsToView(mPokerHomebase.getSnapshot());
                     Toast.makeText(getContext(), "Session Deleted", Toast.LENGTH_LONG).show();
                 }
                 else {
                     Toast.makeText(getContext(), "Can only delete CLOSED sessions!", Toast.LENGTH_LONG).show();
-                    addSessionsToView(ss);
+                    addSessionsToView(mPokerHomebase.getSnapshot());
                 }
 
             }
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                /*if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    // Get RecyclerView item from the ViewHolder
-                    View itemView = viewHolder.itemView;
 
-                    Paint p = new Paint();
-                    p.setColor(getContext().getResources().getColor(R.color.red));
-                    if (dX > 0) {
-                        *//* Set your color for positive displacement *//*
-
-                        // Draw Rect with varying right side, equal to displacement dX
-                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
-                                (float) itemView.getBottom(), p);
-                    } else {
-                        *//* Set your color for negative displacement *//*
-
-                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
-                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
-                    }
-
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                }*/
                 final float ALPHA_FULL = 1.0f;
 
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {

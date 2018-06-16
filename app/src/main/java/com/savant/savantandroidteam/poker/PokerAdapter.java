@@ -65,6 +65,7 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
         String sessionStatus;
 
         if(hb.isRevealed(position)){ // Session is over
+            System.out.println(position);
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.pokerSessionClosed));
             sessionStatus = "CLOSED";
         }
