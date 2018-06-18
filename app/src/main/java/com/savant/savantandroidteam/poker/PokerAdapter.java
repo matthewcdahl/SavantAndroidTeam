@@ -107,7 +107,7 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
         String hostModEmail = listItem.getHost();
         String nickname;
         if(rHb!=null) nickname = rHb.getNickname(hostModEmail);
-        else nickname = "";
+        else nickname = "Loading...";
 
         holder.name.setText(listItem.getName() + ": " + sessionStatus);
         holder.host.setText("Host: " + nickname);
@@ -142,7 +142,7 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
             name = (TextView) itemView.findViewById(R.id.tv_name);
             host = (TextView) itemView.findViewById(R.id.tv_host);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_test);
-            host.setText("");
+            host.setText("Loading...");
             //linearLayout.setBackgroundColor(itemView.getResources().getColor(R.color.white));
         }
 

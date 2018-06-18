@@ -79,7 +79,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         Resources r = context.getResources();
         int px6 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
         int px3 = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, r.getDisplayMetrics());
-        
+
         if(listItems.size() == 1){
             setMargins(holder.linearLayout, 0,px6,0,px6);
         }
