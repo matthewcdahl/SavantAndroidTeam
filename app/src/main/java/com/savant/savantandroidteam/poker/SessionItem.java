@@ -18,11 +18,12 @@ import java.util.ArrayList;
 
 public class SessionItem {
 
-    private String name, host, id, revealed;
+    private String name, host, id, revealed, hostEmail;
     private ArrayList<Tuple> responses;
 
 
     public SessionItem(){
+        hostEmail = "";
         name = "";
         host = "";
         responses = new ArrayList<>();
@@ -34,6 +35,8 @@ public class SessionItem {
         this.name = name;
         this.host = host;
     }
+
+
 
     public String getName() {
         return name;

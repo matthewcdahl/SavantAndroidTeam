@@ -48,6 +48,16 @@ public class PokerResultsHomebase {
         mUsersSnapshot = mDataSnapshot.child("users");
     }
 
+    public PokerResultsHomebase(DataSnapshot ss){ // For loading purposes this will help speed things along if the snapshot is available
+        mDatabase = FirebaseDatabase.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mRootRef = mDatabase.getReference();
+        mPokerRef = mRootRef.child("poker");
+        mDataSnapshot = ss;
+        mPokerSnapshot = mDataSnapshot.child("poker");
+        mUsersSnapshot = mDataSnapshot.child("users");
+    }
+
 
 
 
@@ -211,7 +221,8 @@ public class PokerResultsHomebase {
         return "15";
     }
 
-    private String getNickname(String email){
+    public String getNickname(String email){
+        System.out.println("host email " + email);
         DataSnapshot userRef = mUsersSnapshot;
         Iterable<DataSnapshot> iter = userRef.getChildren();
         for(DataSnapshot child: iter){
@@ -219,6 +230,7 @@ public class PokerResultsHomebase {
                 Iterable<DataSnapshot> iter2 = child.getChildren();
                 for(DataSnapshot child2: iter2){
                     if(child2.getKey().equals("nickname")){
+                        System.out.println("child2  " + child2.getValue().toString());
                         return child2.getValue().toString();
                     }
                 }
@@ -246,33 +258,6 @@ public class PokerResultsHomebase {
         }
     }
 
-
-
-    private String extractName(String email){
-        String fn = email.substring(0, email.indexOf(","));
-        fn = fn.substring(0,1).toUpperCase() + fn.substring(1);
-        return fn;
-    }
-
-    public boolean isHostOfSession(int position){
-
-        int idPos = getIdPos(position);
-        String host = getSessions().get(position).getHost();
-        String emailHolder = mAuth.getCurrentUser().getEmail();
-        String user = emailHolder.substring(0, emailHolder.indexOf('.'));
-        String userName = user.substring(0, 1).toUpperCase() + user.substring(1);
-        return userName.equals(host);
-    }
-
-    public boolean isHostOfSessionDelete(String position){
-
-        int idPos = getPosId(position);
-        String host = getSessions().get(idPos).getHost();
-        String emailHolder = mAuth.getCurrentUser().getEmail();
-        String user = emailHolder.substring(0, emailHolder.indexOf('.'));
-        String userName = user.substring(0, 1).toUpperCase() + user.substring(1);
-        return userName.equals(host);
-    }
 
     public String getResultSessionName(String id){
 

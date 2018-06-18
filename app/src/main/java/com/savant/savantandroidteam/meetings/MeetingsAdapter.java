@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.savant.savantandroidteam.R;
 import com.savant.savantandroidteam.poker.PokerHostFragment;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -78,8 +79,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         Resources r = context.getResources();
         int px6 = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
         int px3 = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, r.getDisplayMetrics());
-
-
+        
         if(listItems.size() == 1){
             setMargins(holder.linearLayout, 0,px6,0,px6);
         }
@@ -90,7 +90,6 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         else if(position == getItemCount()-1){
             setMargins(holder.linearLayout, 0,px3,0,px6);
         }
-
         String dateHolder = listItem.getDate().replace('-', '/');
 
         holder.desc.setText(listItem.getDesc());

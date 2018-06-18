@@ -72,6 +72,8 @@ public class PokerUserFragment extends Fragment {
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new PokerMainFragment()).commit();
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }
         });
 
@@ -224,6 +226,7 @@ public class PokerUserFragment extends Fragment {
         return name;
     }
 
+    @NonNull
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }

@@ -17,8 +17,10 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.savant.savantandroidteam.R;
 
 import java.util.List;
@@ -32,13 +34,15 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
     private FirebaseAuth mAuth;
     private String userName;
     private FirebaseDatabase mDB;
-    private DatabaseReference mPoker;
+    private DatabaseReference mRoot;
     PokerHomebase hb;
+    PokerResultsHomebase rHb;
 
-    public PokerAdapter(List<SessionItem> listItems, Context context, DataSnapshot ss) {
+    public PokerAdapter(List<SessionItem> listItems, final Context context, DataSnapshot ss) {
         this.listItems = listItems;
         this.context = context;
         hb = new PokerHomebase(ss);
+        System.out.println("SS!!!!" + ss.toString()); //SS is the poker ss not the overall!!!!
         mAuth = FirebaseAuth.getInstance();
         userName = mAuth.getCurrentUser().getEmail();
         for(int i = 0; i<userName.length(); i++){
@@ -48,7 +52,17 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
         }
         userName = userName.substring(0, 1).toUpperCase() + userName.substring(1);
         mDB = FirebaseDatabase.getInstance();
-        mPoker = mDB.getReference("poker");
+        mRoot = mDB.getReference();
+        final PokerAdapter a  = this;
+        mRoot.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                rHb = new PokerResultsHomebase(dataSnapshot);
+                a.notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     @Override
@@ -90,8 +104,13 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
             setMargins(holder.linearLayout, 0,px3,0,px6);
         }
 
-        holder.host.setText(listItem.getHost());
+        String hostModEmail = listItem.getHost();
+        String nickname;
+        if(rHb!=null) nickname = rHb.getNickname(hostModEmail);
+        else nickname = "";
+
         holder.name.setText(listItem.getName() + ": " + sessionStatus);
+        holder.host.setText("Host: " + nickname);
         holder.linearLayout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(final View view){
@@ -123,6 +142,7 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
             name = (TextView) itemView.findViewById(R.id.tv_name);
             host = (TextView) itemView.findViewById(R.id.tv_host);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_test);
+            host.setText("");
             //linearLayout.setBackgroundColor(itemView.getResources().getColor(R.color.white));
         }
 

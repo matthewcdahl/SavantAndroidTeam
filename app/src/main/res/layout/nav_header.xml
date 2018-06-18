@@ -21,14 +21,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Matthew Dahl" />
+        android:text="Loading..." />
 
     <TextView
         android:id="@+id/tv_email_drawer_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="matthew.dahl@savant.com"
+        android:text="Loading..."
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 

@@ -1,5 +1,6 @@
 package com.savant.savantandroidteam.poker;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,6 +21,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +60,8 @@ public class PokerMainFragment extends Fragment {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_poker_main, container, false);
         ((MainActivity)getActivity()).setUpToolbar("Poker Sessions");
+
+
 
 
 
@@ -202,13 +206,13 @@ public class PokerMainFragment extends Fragment {
             ref.child("name").setValue(newSessionName);
 
             //Set Host of session
-            String userEmail = mAuth.getCurrentUser().getEmail();
-            for (int i = 0; i < userEmail.length(); i++) {
+            String userEmail = getModifiedEmail();
+            /*for (int i = 0; i < userEmail.length(); i++) {
                 if (userEmail.charAt(i) == '.') {
                     userEmail = userEmail.substring(0, i);
                 }
             }
-            userEmail = userEmail.substring(0, 1).toUpperCase() + userEmail.substring(1);
+            userEmail = userEmail.substring(0, 1).toUpperCase() + userEmail.substring(1);*/
             ref.child("host").setValue(userEmail);
 
             //Set is Revealed
@@ -252,6 +256,10 @@ public class PokerMainFragment extends Fragment {
             mNoCurrentText.setVisibility(View.GONE);
             mClickPlusText.setVisibility(View.GONE);
         }
+    }
+
+    private String getModifiedEmail(){
+        return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }
 
 }

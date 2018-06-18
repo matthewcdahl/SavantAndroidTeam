@@ -176,23 +176,13 @@ public class PokerHomebase {
 
     public boolean isHostOfSession(int position){
 
-        int idPos = getIdPos(position);
         String host = getSessions().get(position).getHost();
-        String emailHolder = mAuth.getCurrentUser().getEmail();
-        String user = emailHolder.substring(0, emailHolder.indexOf('.'));
-        String userName = user.substring(0, 1).toUpperCase() + user.substring(1);
-        return userName.equals(host);
+        String emailHolder = getUserModifiedEmail();
+        /*String user = emailHolder.substring(0, emailHolder.indexOf('.'));
+        String userName = user.substring(0, 1).toUpperCase() + user.substring(1);*/
+        return emailHolder.equals(host);
     }
 
-    public boolean isHostOfSessionDelete(String position){
-
-        int idPos = getPosId(position);
-        String host = getSessions().get(idPos).getHost();
-        String emailHolder = mAuth.getCurrentUser().getEmail();
-        String user = emailHolder.substring(0, emailHolder.indexOf('.'));
-        String userName = user.substring(0, 1).toUpperCase() + user.substring(1);
-        return userName.equals(host);
-    }
 
     public boolean isRevealed(int position){
         if(position == -1) return false;
