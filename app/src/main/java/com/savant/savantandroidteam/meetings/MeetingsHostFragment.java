@@ -198,7 +198,7 @@ public class MeetingsHostFragment extends Fragment {
 
         }
         else {
-            id = Integer.toString((int) (Math.random() * 5000 + 1)); //Random number so if there are 2 meetings at same time one will not be overwritten
+            id = Integer.toString((int) (Math.random() * 9999 + 1)); //Random number so if there are 2 meetings at same time one will not be overwritten
         }
         String name = mNameET.getText().toString();
         String place = mPlaceET.getText().toString();

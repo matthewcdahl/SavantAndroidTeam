@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -58,7 +59,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item, parent, false);
+                .inflate(R.layout.list_item_meetings, parent, false);
         return new ViewHolder(view);
     }
 
@@ -66,7 +67,6 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final MeetingItem listItem = listItems.get(position);
         String status;
-        Log.d("DATEiii", listItem.getDate());
         if (meetingDateHasPassed(listItem.getDate(), listItem.getTime())) {
             status = "PASSED";
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.sprintMeetingOver));
@@ -91,7 +91,12 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
             setMargins(holder.linearLayout, 0,px3,0,px6);
         }
 
-        holder.id.setText(listItem.getDate() + " " + listItem.getTime());
+        String dateHolder = listItem.getDate().replace('-', '/');
+
+        holder.desc.setText(listItem.getDesc());
+        holder.desc.setEllipsize((TextUtils.TruncateAt.END));
+        holder.date.setText("DATE: " + dateHolder);
+        holder.time.setText("TIME: " + listItem.getTime());
         holder.name.setText(listItem.getName() + ": " + status);
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -119,13 +124,15 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView id, name;
+        public TextView date, time, name, desc;
         public LinearLayout linearLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            desc = (TextView) itemView.findViewById(R.id.tv_desc_meeting_main);
             name = (TextView) itemView.findViewById(R.id.tv_name);
-            id = (TextView) itemView.findViewById(R.id.tv_host);
+            date = (TextView) itemView.findViewById(R.id.tv_date);
+            time = (TextView) itemView.findViewById(R.id.tv_time);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_test);
         }
 
