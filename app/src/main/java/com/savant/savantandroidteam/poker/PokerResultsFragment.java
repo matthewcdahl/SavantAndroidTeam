@@ -152,6 +152,7 @@ public class PokerResultsFragment extends Fragment {
                         FragmentTransaction transaction = fm.beginTransaction();
                         transaction.replace(R.id.fragment_container, fragment);
                         transaction.commit();
+                        Toast.makeText(getContext(), "Session Deleted", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -235,8 +236,6 @@ public class PokerResultsFragment extends Fragment {
     private void deleteSession() {
         String id = getSession();
         newHomebase.removeSession(id);
-        Toast.makeText(getContext(), "Session Deleted", Toast.LENGTH_LONG).show();
-
     }
 
     //return to main fragment

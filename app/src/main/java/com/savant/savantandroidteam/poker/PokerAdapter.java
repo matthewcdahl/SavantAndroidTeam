@@ -58,6 +58,7 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 rHb = new PokerResultsHomebase(dataSnapshot);
+                System.out.println("11111: " + dataSnapshot.toString());
                 a.notifyDataSetChanged();
             }
             @Override
@@ -106,7 +107,8 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
 
         String hostModEmail = listItem.getHost();
         String nickname;
-        if(rHb!=null) nickname = rHb.getNickname(hostModEmail);
+        System.out.println("hostModEmail: " + hostModEmail);
+        if(rHb!=null && hostModEmail!="") nickname = rHb.getNickname(hostModEmail);
         else nickname = "Loading...";
 
         holder.name.setText(listItem.getName() + ": " + sessionStatus);

@@ -222,8 +222,9 @@ public class PokerResultsHomebase {
     }
 
     public String getNickname(String email){
-        System.out.println("host email " + email);
+        System.out.println("host email: " + email);
         DataSnapshot userRef = mUsersSnapshot;
+        System.out.println("USER REF: " + userRef.toString());
         Iterable<DataSnapshot> iter = userRef.getChildren();
         for(DataSnapshot child: iter){
             if(email.equals(child.getKey())){
@@ -236,7 +237,8 @@ public class PokerResultsHomebase {
                 }
             }
         }
-        return getUserName();
+        System.out.println("Before Return: " + email);
+        return getFirstName(email);
     }
 
 
@@ -269,6 +271,16 @@ public class PokerResultsHomebase {
 
     public void removeSession(String id){
         mPokerRef.child(id).removeValue();
+    }
+
+    public String getFirstName(String email){
+        System.out.println(email);
+        String name = email.substring(0, email.indexOf(','));
+        try {
+            return name.substring(0, 1).toUpperCase() + name.substring(1);
+        }catch (Exception e){
+            return name.substring(0, 1).toUpperCase();
+        }
     }
 
 
