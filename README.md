@@ -16,6 +16,7 @@ Includes Features to help new team members as well as everyone in their sprint p
 1. Structure
 
 	I have the database structured into 3 sections. Poker, Meetings, and Users. 
+	
 	Poker - Every time someone creates a poker session it immediately gets uploaded to 
 	        Firebase. It will assign it an id of whatever the previous sessions id is +1.
 	        It will also log who the host is. When results start coming in there will be a subsection within
@@ -25,6 +26,7 @@ Includes Features to help new team members as well as everyone in their sprint p
                     
 	Meetings - A meeting will not be pushed to Firebase until the host has entered all of the info for it and
 	           clicked on submit. It will then populate with the name, time, place, description, date, and time.
+		   
 	Users - The first time a user logs in it will create a new section for them based on their email. When they make a nickname
 	        and update their profile picture, that info will also be pushed into the database.
 
