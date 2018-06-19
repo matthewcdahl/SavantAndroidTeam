@@ -1,7 +1,6 @@
 package com.savant.savantandroidteam.profile;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,16 +29,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.savant.savantandroidteam.MainActivity;
 import com.savant.savantandroidteam.R;
-import com.savant.savantandroidteam.meetings.MeetingsHostFragment;
 
 public class ProfileFragment extends Fragment {
 
-    Button editPic;
+    //UI Declarations
+    Button editPicBtn;
     TextView mName;
     TextView mEmail;
     ImageView mImage;
     EditText mNickname;
 
+    //Firebase Declarations
     FirebaseAuth mAuth;
     FirebaseDatabase db;
     DatabaseReference mUsersRef;
@@ -51,26 +50,24 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         setHasOptionsMenu(false);
-
-
         ((MainActivity)getActivity()).setUpToolbar("Profile");
 
+        //Firebase Initializations
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance();
         mUsersRef = db.getReference("users");
         mUserRef = mUsersRef.child(getModifiedEmail());
 
+        //UI Initializations
         mName = (TextView) view.findViewById(R.id.profile_name);
         mEmail = (TextView) view.findViewById(R.id.profile_email);
         mImage = (ImageView) view.findViewById(R.id.profile_img);
         mNickname = (EditText) view.findViewById(R.id.et_profile_nickName);
         mNickname.setCursorVisible(false);
+        editPicBtn = view.findViewById(R.id.edit_btn_profile);
 
-        ((MainActivity) getActivity()).setTitle("Profile");
-
-        editPic = view.findViewById(R.id.edit_btn_profile);
-
-        editPic.setOnClickListener(new View.OnClickListener() {
+        //Switch to Profile Icons Fragment if clicked
+        editPicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                // ((MainActivity) getActivity()).getSupportActionBar().hide();
@@ -106,23 +103,27 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    /**
+     *
+     * These methods will initialize the menu for submitting nickname
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.profile_submit_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-
         switch (item.getItemId()){
             case R.id.submit_nickname:
                 submitNickname();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Load the info from firebase to populate cells
+     */
     private void setInfo(){
         mUserRef.addValueEventListener(new ValueEventListener() {
             boolean setProPic = false;
@@ -156,19 +157,29 @@ public class ProfileFragment extends Fragment {
         mEmail.setText(email);
     }
 
+    /**
+     *
+     * @return Full name of the user
+     */
     private String getName(){
         String email = mAuth.getCurrentUser().getEmail();
-        String first = email.substring(0, email.indexOf('.'));
         String last = email.substring(email.indexOf('.')+1, email.indexOf('@'));
-        first = first.substring(0,1).toUpperCase() + first.substring(1);
         last = last.substring(0,1).toUpperCase() + last.substring(1);
+        String first = getFirstName();
         return first + " " + last;
     }
 
+    /**
+     * @return the email of the user
+     */
     private String getEmail(){
         return mAuth.getCurrentUser().getEmail();
     }
 
+    /**
+     *
+     * @return first name of the user
+     */
     private String getFirstName(){
         String email = mAuth.getCurrentUser().getEmail();
         String first = email.substring(0, email.indexOf('.'));
@@ -199,10 +210,17 @@ public class ProfileFragment extends Fragment {
             R.drawable.profile_icon_49, R.drawable.profile_icon_50
     };
 
+    /**
+     *
+     * @return the users email with '.' replaced to ',' for firebase purposes
+     */
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }
 
+    /**
+     * Submit the nickmane to firebase and do error checking
+     */
     private void submitNickname(){
         String nickname = mNickname.getText().toString().trim();
         mNickname.setText(nickname);
@@ -220,6 +238,10 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+
+    /**
+     * initiate the click listener for entering a nickname
+     */
     private void initiateListeners(){
         mNickname.setOnClickListener(new View.OnClickListener() {
             @Override

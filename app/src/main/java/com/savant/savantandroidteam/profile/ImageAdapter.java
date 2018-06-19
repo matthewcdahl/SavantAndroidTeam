@@ -12,6 +12,10 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.savant.savantandroidteam.R;
 
+/**
+ * This adapter is to populate the grid view for the ProfileIconsFragment
+ */
+
 public class ImageAdapter extends BaseAdapter {
 
     private Context mContext;
@@ -20,17 +24,11 @@ public class ImageAdapter extends BaseAdapter {
         mContext = c;
     }
 
-    public int getCount(){
-        return mThumbIds.length;
-    }
+    public int getCount(){ return mThumbIds.length; }
 
-    public Object getItem(int pos){
-        return mThumbIds[pos];
-    }
+    public Object getItem(int pos){ return mThumbIds[pos]; }
 
-    public long getItemId(int pos){
-        return pos;
-    }
+    public long getItemId(int pos){ return pos;}
 
     // create a new ImageView for each item referenced by the Adapter
     @Override
@@ -47,6 +45,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
+        //This makes it act like a recycler view and decreases the lag
         Glide.with(mContext).load(mThumbIds[position]).into(imageView);
 
 

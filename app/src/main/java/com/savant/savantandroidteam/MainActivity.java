@@ -1,7 +1,6 @@
 package com.savant.savantandroidteam;
 
 
-//local HEY
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -44,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //UI
     private DrawerLayout mDrawer;
-
     private NavigationView navView;
     private ActionBarDrawerToggle mDrawerToggle;
     public Toolbar toolbar;
@@ -63,24 +61,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //UI
-
-
-        //Firebase
+        //Firebase initializations
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         mRootRef = mDatabase.getReference("users");
         mUserRef = mRootRef.child(getModifiedEmail());
         addUserToDatabase();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
         setUpToolbar("Savant Android Wiki Links");
-        //Set up the drawer
+
+        //If there was no saved fragment when the app was closed it will load up the getting started
         if(savedInstanceState == null) {
+            NavigationView navigationView = findViewById(R.id.nav_view);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GettingStartedFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_getting_started);
         }
 
+        //When the nickname and profile picture are loaded this is called
         mUserRef.addValueEventListener(new ValueEventListener() {
 
             boolean proPicSet = false;
@@ -103,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) { }
         });
@@ -111,6 +107,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    /**
+     *
+     * @param title The title for the toolbar
+     * This will set the title for the toolbar in whichever fragment
+     * or activity calls it
+     */
     public void setUpToolbar(String title){
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -140,12 +142,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDrawerStateChanged(int newState) {}
         });
-        //Set up drawer header
-        setHeaderInfo();
-
-
-        //If there was no saved fragment when the app was closed it will load up the getting started
-
+        //Set up drawer email
+        setEmail();
     }
 
     @Override
@@ -196,11 +194,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
     }
 
-    private void setHeaderInfo(){
+
+    private void setEmail(){
         navView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navView.getHeaderView(0);
         ImageView profileImage = (ImageView) hView.findViewById(R.id.iv_image);
-        TextView userNameView = (TextView) hView.findViewById(R.id.tv_name_drawer_header);
         TextView emailView = (TextView) hView.findViewById(R.id.tv_email_drawer_header);
 
         profileImage.setOnClickListener(new View.OnClickListener() {
@@ -211,47 +209,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        String fullName = getFullName();
+        //the fullname is set in the nickname listener
         String email = getEmail();
-
-
-        //userNameView.setText(fullName); the fullname is set in the nickname listener
         emailView.setText(email);
 
     }
 
-    //Will get the users name based off of their email address
-    //Limited to emails that are in the format 'first.last@email.com'
+
+
+    /**
+     * @return the users first and last name for the header
+     * Will get the users name based off of their email address
+     * Limited to emails that are in the format 'first.last@email.com'
+     */
     private String getFullName(){
         String email = mAuth.getCurrentUser().getEmail();
-        String first = email.substring(0, email.indexOf("."));
-        String firstName = first.substring(0, 1).toUpperCase() + first.substring(1);
+        String firstName = getFirstName();
         String last = email.substring(email.indexOf(".")+1, email.indexOf('@'));
         String lastName = last.substring(0, 1).toUpperCase() + last.substring(1);
         return firstName + " " + lastName;
     }
 
+
+    /**
+     *
+     * @return the first name of the user taken from their email
+     */
     private String getFirstName(){
-        String email = mAuth.getCurrentUser().getEmail();
+        String email = getEmail();
         String first = email.substring(0, email.indexOf("."));
         String firstName = first.substring(0, 1).toUpperCase() + first.substring(1);
         return firstName;
     }
 
-    //Returns the users Email from Firebase
+    /**
+     * @return the users Email from Firebase
+     */
     private String getEmail(){
         return mAuth.getCurrentUser().getEmail().trim();
     }
 
-    //Returns the users Email from Firebase
+
+    /**
+     *
+     * @return users Email from Firebase
+     */
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
         //TESTER comments
         //hi
     }
 
-    //Phone back button pressed will not work except to close drawer
-    //Looking into proper navigation for the entire app!
+
+
+    /**
+     * Phone back button pressed will not work except to close drawer
+     * Looking into proper navigation for the entire app!
+     */
     @Override
     public void onBackPressed(){
         if(mDrawer.isDrawerOpen(GravityCompat.START)){
@@ -262,6 +276,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    /**
+     * The int array for all the profile pictures
+     */
     private Integer[] mThumbIds = {
             R.drawable.profile_icon_1, R.drawable.profile_icon_2, R.drawable.profile_icon_3,
             R.drawable.profile_icon_4, R.drawable.profile_icon_5, R.drawable.profile_icon_6,
@@ -282,11 +299,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             R.drawable.profile_icon_49, R.drawable.profile_icon_50
     };
 
+    /**
+     * Adds users name and email to the database
+     */
     private void addUserToDatabase(){
         mUserRef.child("name").setValue(getFullName());
         mUserRef.child("email").setValue(getEmail());
     }
 
+    /**
+     *
+     * @param picId the position of the profile picture
+     */
     private void setProfilePic(String picId){
         navView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navView.getHeaderView(0);
@@ -294,6 +318,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         profileImage.setImageResource(mThumbIds[Integer.parseInt(picId)]);
     }
 
+    /**
+     *
+     * @param nickname the users set nickname.
+     * Will set the full name and nickname given to the header
+     *
+     */
     private void setNickname(String nickname){
         navView = (NavigationView) findViewById(R.id.nav_view);
         View hView = navView.getHeaderView(0);

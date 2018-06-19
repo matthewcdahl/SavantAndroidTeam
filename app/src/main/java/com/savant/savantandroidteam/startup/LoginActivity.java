@@ -20,11 +20,13 @@ import com.savant.savantandroidteam.R;
 
 public class LoginActivity extends AppCompatActivity {
 
+    //UI Declarations
     private EditText mEmail;
     private EditText mPassword;
     private Button mLoginBtn;
     private Button mForgotPasswordBtn;
 
+    //Firebase Declarations
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
@@ -34,13 +36,16 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
 
+        //UI Initializations
         mEmail = (EditText) findViewById(R.id.et_email);
         mPassword = (EditText) findViewById(R.id.et_password);
         mLoginBtn = (Button) findViewById(R.id.button_login);
         mForgotPasswordBtn = (Button) findViewById(R.id.button_forgot_password);
 
+        //Firebase Initialzation
         mAuth = FirebaseAuth.getInstance();
 
+        //Button Listeners
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+        //Will automatically log in a user if they have logged in berfore.
         mAuthStateListener = new FirebaseAuth.AuthStateListener(){
             @Override
             public void onAuthStateChanged(FirebaseAuth firebaseAuth){
@@ -70,18 +77,25 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * add the listener to mAuth on start of activity
+     */
     @Override
     protected void onStart(){
         super.onStart();
         mAuth.addAuthStateListener(mAuthStateListener);
     }
 
+    /**
+     * Does not allow use of the back button
+     */
     @Override
-    public void onBackPressed(){
-
-    }
+    public void onBackPressed(){}
 
 
+    /**
+     * Will sign the user in with correct credentials
+     */
     private void startSignIn(){
 
         String email = mEmail.getText().toString();

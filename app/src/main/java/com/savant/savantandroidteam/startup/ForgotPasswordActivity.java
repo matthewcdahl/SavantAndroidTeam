@@ -16,9 +16,11 @@ import com.savant.savantandroidteam.R;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
+    //UI Declarations
     private TextView mEmail;
     private Button mSendReset;
 
+    //Firebase Declarations
     private FirebaseAuth mAuth;
 
     @Override
@@ -27,6 +29,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_forgot_password);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //UI initializations
         mEmail = (TextView) findViewById(R.id.et_forgot_password_email);
         mSendReset = (Button) findViewById(R.id.btn_send_reset_email);
 
@@ -40,6 +43,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * will send an email to the user for instructions on resetting.
+     */
     private void sendResetEmail(){
         final String email = mEmail.getText().toString();
         if(!email.isEmpty()) {
@@ -63,6 +69,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * For the Firebase initializations
+     */
     @Override
     protected void onStart(){
         super.onStart();

@@ -1,21 +1,6 @@
 package com.savant.savantandroidteam.poker;
 
-/*
 
-//Firebase EXAMPLE
-        mDatabase = FirebaseDatabase.getInstance();
-        mPokerDatabase = mDatabase.getReference("poker");
-        DatabaseReference child10 = mPokerDatabase.child("1");
-        DatabaseReference child11 = child10.child("Responses");
-        DatabaseReference child12 = child11.child("Matt");
-        DatabaseReference child13 = child11.child("Tyler");
-        child10.setValue("Add Button");
-        child12.setValue("5");
-        child13.setValue("7");
-        child10.removeValue();
-
-
- */
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -55,6 +40,10 @@ import com.savant.savantandroidteam.R;
 import com.savant.savantandroidteam.profile.ProfileFragment;
 
 import java.util.zip.Inflater;
+
+/*
+    This is the fragment for when a user creates a poker session
+ */
 
 public class PokerHostFragment extends Fragment {
 

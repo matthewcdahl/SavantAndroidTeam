@@ -35,18 +35,19 @@ import com.savant.savantandroidteam.R;
 
 public class ProfileIconsFragment extends Fragment {
 
-    GridView gridView;
+    //UI Declarations
+    private GridView gridView;
     private NavigationView navView;
 
-    //Firebase
-    FirebaseAuth mAuth;
-    FirebaseDatabase database;
-    DatabaseReference mUsersRef;
-    DatabaseReference mUserRef;
+    //Firebase Declarations
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase database;
+    private DatabaseReference mUsersRef;
+    private DatabaseReference mUserRef;
 
-    //TOOLBAR
+    //TOOLBAR Declarations
     private ActionBar masterBarHolder;
-    Toolbar toolbar;
+    private Toolbar toolbar;
 
 
     @Nullable
@@ -55,15 +56,15 @@ public class ProfileIconsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile_icons, container, false);
         ((MainActivity) getActivity()).setTitle("Select Icon");
 
+        //Firebase initializations
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         mUsersRef = database.getReference("users");
         mUserRef = mUsersRef.child(getModifiedEmail());
 
-        //TOOLBAR
+        //TOOLBAR initialization
         masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
         masterBarHolder.hide();
-
         toolbar = view.findViewById(R.id.toolbar_with_back);
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
@@ -75,8 +76,7 @@ public class ProfileIconsFragment extends Fragment {
         });
 
 
-
-
+        //UI Initializations
         gridView = (GridView) view.findViewById(R.id.gridview);
         gridView.setAdapter(new ImageAdapter(getContext()));
 
@@ -102,18 +102,23 @@ public class ProfileIconsFragment extends Fragment {
     }
 
 
-
-
+    /**
+     *
+     * @param pos position of the picture logo
+     */
     private void setHeaderInfo(int pos) {
         navView = (NavigationView) getActivity().findViewById(R.id.nav_view);
         View hView = navView.getHeaderView(0);
         ImageView profileImage = (ImageView) hView.findViewById(R.id.iv_image);
-
         int img = getProfileImage(pos);
-
         profileImage.setImageResource(img);
     }
 
+    /**
+     *
+     * @param pos
+     * @return the image drawable from the given pos.
+     */
     private int getProfileImage(int pos) {
         return mThumbIds[pos];
     }
@@ -138,6 +143,9 @@ public class ProfileIconsFragment extends Fragment {
             R.drawable.profile_icon_49, R.drawable.profile_icon_50
     };
 
+    /**
+     *@return users Email from Firebase with the ','
+     */
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }

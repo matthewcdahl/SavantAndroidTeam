@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 public class GettingStartedFragment extends Fragment {
 
-    //UI
+    //UI Declarations
     private Button mHomepage;
     private Button mDeveloping;
     private Button mScrum;
@@ -35,12 +35,9 @@ public class GettingStartedFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_getting_started, container, false);
-
         ((MainActivity)getActivity()).setUpToolbar("Savant Android Wiki Links");
 
-
-
-        //UI
+        //UI Initializations
         mHomepage = view.findViewById(R.id.homepage_btn);
         mDeveloping = view.findViewById(R.id.start_dev_btn);
         mScrum = view.findViewById(R.id.scrum_btn);
@@ -49,6 +46,16 @@ public class GettingStartedFragment extends Fragment {
         mMVP = view.findViewById(R.id.mvp_btn);
 
         //Button Listeners
+        setupListeners();
+
+        return view;
+    }
+
+    /**
+     * This will listen for any clicks on the links and will then
+     * redirect to the appropriate webpage
+     */
+    private void setupListeners(){
         mHomepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +64,6 @@ public class GettingStartedFragment extends Fragment {
                 startActivity(browserIntent);
             }
         });
-
         mDeveloping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,9 +104,6 @@ public class GettingStartedFragment extends Fragment {
                 startActivity(browserIntent);
             }
         });
-
-
-        return view;
     }
 
 
