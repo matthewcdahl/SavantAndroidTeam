@@ -47,7 +47,7 @@ import java.util.zip.Inflater;
 
 public class PokerHostFragment extends Fragment {
 
-    //UI
+    //UI Declarations
     private Button mShowResponses;
     private Button mSubmitName;
     private Button mSubmitDiff;
@@ -56,7 +56,7 @@ public class PokerHostFragment extends Fragment {
     private EditText mDiff;
 
 
-    //Firebase
+    //Firebase Declarations
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mPokerDatabase;
@@ -64,7 +64,7 @@ public class PokerHostFragment extends Fragment {
     private DatabaseReference mResponsesRef;
     private DatabaseReference mNameRef;
 
-    //Logic
+    //Logic Declarations
     private boolean dialogIsOpen;
 
     //TOOLBAR
@@ -101,7 +101,7 @@ public class PokerHostFragment extends Fragment {
 
 
 
-        //UI
+        //UI Initializations
         mShowResponses = (Button) view.findViewById(R.id.poker_show_response_btn);
         mSubmitName = (Button) view.findViewById(R.id.submit_activity_name_host);
         mSubmitDiff = (Button) view.findViewById(R.id.submit_activity_diff_host);
@@ -114,7 +114,7 @@ public class PokerHostFragment extends Fragment {
         mDiff = (EditText) view.findViewById(R.id.et_difficulty);
         mDiff.setText(getSessionDIFF());
 
-        //Firebase
+        //Firebase Initializations
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         mPokerDatabase = mDatabase.getReference("poker");
@@ -220,17 +220,27 @@ public class PokerHostFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Clear focus from the edit text
+     * TODO test if it actually does anything
+     */
     @Override
     public void onPause() {
         super.onPause();
         mDiff.clearFocus();
     }
 
+    /**
+     * upload name of session to firebase
+     */
     private void submitName(){
         String name = mName.getText().toString();
         mCurrentSession.child("name").setValue(name);
     }
 
+    /**
+     * upload response to firebase
+     */
     private void submitDiff(){
         String diff = mDiff.getText().toString();
         if(diff.isEmpty()) diff = "0";
@@ -241,6 +251,9 @@ public class PokerHostFragment extends Fragment {
 
     }
 
+    /**
+     * Switch to results fragment
+     */
     private void showResponses(){
         mCurrentSession.child("revealed").setValue("true");
 
@@ -256,24 +269,40 @@ public class PokerHostFragment extends Fragment {
         ft.commit();
     }
 
+    /*
+    * Get id of session from bundle
+    */
+
     private String getSessionID(){
         Bundle arguments = getArguments();
         String session = arguments.getString("ID");
         return session;
     }
 
+    /*
+     * Get name of session from bundle
+     */
     private String getSessionNAME(){
         Bundle arguments = getArguments();
         String name = arguments.getString("NAME");
         return name;
     }
 
+    /*
+     * Get response of user for session from bundle
+     */
     private String getSessionDIFF(){
         Bundle arguments = getArguments();
         String diff = arguments.getString("DIFF");
         return diff;
     }
 
+
+    /**
+     *
+     * @param ds current session snapshot
+     * counts the number of current sessions
+     */
     private void updateResponseTag(DataSnapshot ds){
         Iterable<DataSnapshot> snapshotIterable = ds.getChildren();
         int count = 0;
@@ -283,6 +312,9 @@ public class PokerHostFragment extends Fragment {
         mResponsesText.setText("Responses: " + count);
     }
 
+    /**
+     * Menu to go back to previous page
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu,inflater);
@@ -294,6 +326,10 @@ public class PokerHostFragment extends Fragment {
         return true;
     }
 
+    /**
+     *
+     * @return current user email with '.' swapped with ','
+     */
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }

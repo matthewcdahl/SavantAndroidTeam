@@ -22,19 +22,19 @@ import java.util.List;
 
 public class PokerResultsHomebase {
 
-    //Firebase
+    //Firebase Declarations
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
     private DatabaseReference mPokerRef;
 
 
-    String sessionID;
-
     //Private Variable for inner use
     public DataSnapshot mDataSnapshot;
     private DataSnapshot mPokerSnapshot;
     private DataSnapshot mUsersSnapshot;
+    private String sessionID;
+
 
 
     public PokerResultsHomebase(DataSnapshot ss, String id){ // For loading purposes this will help speed things along if the snapshot is available
@@ -61,8 +61,14 @@ public class PokerResultsHomebase {
 
 
 
-    //This is the home for reading from firebase. It takes the snapshot and
-    //puts it into a list of SessionItems
+
+
+    /**
+     *
+     * @return a list of all current session items
+     * //This is the home for reading from firebase. It takes the snapshot and
+     * puts it into a list of SessionItems
+     */
     public List<SessionItem> getSessions(){
         List<SessionItem> finalList = new ArrayList<>();
         DataSnapshot ss = mPokerSnapshot;
@@ -106,7 +112,11 @@ public class PokerResultsHomebase {
     }
 
 
-    //For debugging purposes - do not use in distribution
+    /**
+     *
+     * @param arr array to print
+     * This is just for debugging purposes to view the array of session items!!
+     */
     private void printArrayList(List<SessionItem> arr){
         for(int i = 0; i<arr.size(); i++){
             SessionItem curr = arr.get(i);
@@ -136,40 +146,24 @@ public class PokerResultsHomebase {
     }
 
 
-
+    /**
+     *
+     * @param position the index of the session
+     * @return true if the session has had the responses shown
+     * false otherwise
+     */
     public boolean isRevealed(int position){
         if(position == -1) return false;
-
         String revealed = getSessions().get(position).getRevealed();
         if(revealed.equals("false")) return false;
         else return true;
     }
 
-
-
-
-
-
-
-
-
-    public String getUserName(){
-        String email = mAuth.getCurrentUser().getEmail();
-        String hold = email.substring(0, email.indexOf("."));
-        String userName = hold.substring(0, 1).toUpperCase() + hold.substring(1);
-        return userName;
-    }
-
-
-
-
-    private int getIdPos(int pos){
-
-        List<SessionItem> list = getSessions();
-
-        return Integer.parseInt(list.get(pos).getId());
-    }
-
+    /**
+     *
+     * @param id the "id or name" of the session
+     * @return the index of the session
+     */
     public int getPosId(String id){
 
         List<SessionItem> list = getSessions();
@@ -180,11 +174,14 @@ public class PokerResultsHomebase {
 
     }
 
+
+    /**
+     *
+     * @return a list of all the result items
+     */
     public List<ResultItem> getResults(){
         List<ResultItem> finalList = new ArrayList<>();
         //DataSnapshot ss = getSnapshot();
-
-
         DataSnapshot currRef = mPokerSnapshot.child(sessionID);
         DataSnapshot respRef = currRef.child("responses");
         Iterable<DataSnapshot> children = respRef.getChildren();
@@ -203,6 +200,31 @@ public class PokerResultsHomebase {
         return finalList;
     }
 
+    /*
+    *
+    * For debugging purposes - do not use in distribution
+    */
+    private void printResultsArrayList(List<ResultItem> arr){
+        for(int i = 0; i<arr.size(); i++){
+            ResultItem curr = arr.get(i);
+            String name = curr.getName();
+            String result = curr.getResult();
+            //String picId = curr.getId();
+
+
+            Log.d("NAME", name);
+            Log.d("Result", result);
+            //Log.d("ID", id);
+
+
+        }
+    }
+
+    /**
+     *
+     * @param name the name of the user
+     * @return the id of the picture
+     */
     private String getUserPicture(String name){
         DataSnapshot userRef = mUsersSnapshot;
         Iterable<DataSnapshot> iter = userRef.getChildren();
@@ -218,9 +240,14 @@ public class PokerResultsHomebase {
             }
         }
 
-        return "15";
+        return "15"; // Robot is the default
     }
 
+    /**
+     *
+     * @param email the user email
+     * @return the nickname corresponding to that email
+     */
     public String getNickname(String email){
         System.out.println("host email: " + email);
         DataSnapshot userRef = mUsersSnapshot;
@@ -242,37 +269,32 @@ public class PokerResultsHomebase {
     }
 
 
-
-    //For debugging purposes - do not use in distribution
-    private void printResultsArrayList(List<ResultItem> arr){
-        for(int i = 0; i<arr.size(); i++){
-            ResultItem curr = arr.get(i);
-            String name = curr.getName();
-            String result = curr.getResult();
-            //String picId = curr.getId();
-
-
-            Log.d("NAME", name);
-            Log.d("Result", result);
-            //Log.d("ID", id);
-
-
-        }
-    }
-
-
+    /**
+     *
+     * @param id index of the session
+     * @return the name given to the session
+     */
     public String getResultSessionName(String id){
-
         int idPos = getPosId(id);
         List<SessionItem> list = getSessions();
         String name = list.get(idPos).getName();
         return name;
     }
 
+    /**
+     *
+     * @param id to be deleted
+     * Removes the session from firebase
+     */
     public void removeSession(String id){
         mPokerRef.child(id).removeValue();
     }
 
+    /**
+     *
+     * @param email gets the first name given an email
+     * @return the first name of local email given
+     */
     public String getFirstName(String email){
         System.out.println(email);
         String name = email.substring(0, email.indexOf(','));

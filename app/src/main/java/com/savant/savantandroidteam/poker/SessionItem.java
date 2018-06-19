@@ -16,6 +16,7 @@ import java.util.ArrayList;
 *
 */
 
+
 public class SessionItem {
 
     private String name, host, id, revealed, hostEmail;

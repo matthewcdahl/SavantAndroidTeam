@@ -14,6 +14,7 @@ package com.savant.savantandroidteam.poker;
 *
 */
 
+
 public class Tuple {
     private String name, response;
     public Tuple(String name, String response){

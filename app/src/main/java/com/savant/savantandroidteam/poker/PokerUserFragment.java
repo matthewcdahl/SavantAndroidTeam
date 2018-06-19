@@ -31,15 +31,14 @@ import com.savant.savantandroidteam.R;
 
 public class PokerUserFragment extends Fragment {
 
-    //UI
-
+    //UI Declarations
     private Button mSubmitDiff;
     private EditText mDiff;
     private TextView mWaitingText;
     private TextView mSessionName;
 
 
-    //Firebase
+    //Firebase Declarations
     private FirebaseAuth mAuth;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mPokerDatabase;
@@ -57,13 +56,11 @@ public class PokerUserFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_poker_user, container, false);
-
         ((MainActivity) getActivity()).setTitle("Submit Response");
 
         //TOOLBAR
         masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
         masterBarHolder.hide();
-
         toolbar = view.findViewById(R.id.toolbar_with_back);
         ((MainActivity) getActivity()).setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
@@ -84,7 +81,6 @@ public class PokerUserFragment extends Fragment {
         mDiff = (EditText) view.findViewById(R.id.et_difficulty_user);
         mDiff.setText(getSessionDIFF());
         mDiff.setCursorVisible(false);
-
         mDiff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +94,7 @@ public class PokerUserFragment extends Fragment {
         mSessionName = (TextView) view.findViewById(R.id.tv_session_name_user);
         mSessionName.setText(getSessionNAME());
 
-        //Firebase
+        //Firebase Initializations
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance();
         mPokerDatabase = mDatabase.getReference("poker");
@@ -176,27 +172,23 @@ public class PokerUserFragment extends Fragment {
         return view;
     }
 
-
-
-    //Pushes the users name and response to firebase in the form of Key: First name, Value: Response
+    /**
+     * Pushes the users name and response to firebase in the form of Key: First name, Value: Response
+     */
     private void submitDiff(){
         mDiff.setCursorVisible(false);
         String diff = mDiff.getText().toString();
         if(diff.isEmpty()) diff = "0";
         String userEmail = getModifiedEmail();
-        /*for(int i = 0; i<userEmail.length(); i++){
-            if(userEmail.charAt(i) == '.'){
-                userEmail = userEmail.substring(0, i);
-            }
-        }
-        userEmail = userEmail.substring(0, 1).toUpperCase() + userEmail.substring(1);*/
         DatabaseReference userRef = mCurrentSession.child("responses");
         userRef.child(userEmail).setValue(diff);
 
     }
 
-
-    //Returns the unique id of the session from the bundled arguments from the main fragment
+    /**
+     *
+     * @return the unique id of the session from the bundled arguments from the main fragment
+     */
     private String getSessionID(){
         Bundle arguments = getArguments();
         String session = arguments.getString("ID");
@@ -204,7 +196,10 @@ public class PokerUserFragment extends Fragment {
 
     }
 
-    //Gets the current response from the user
+    /**
+     *
+     * @return the current response from the user
+     */
     private String getSessionDIFF(){
         Bundle arguments = getArguments();
         String diff = arguments.getString("DIFF");
@@ -212,20 +207,29 @@ public class PokerUserFragment extends Fragment {
 
     }
 
-    //If the user has given a response they will be told to wait for host
+    /**
+     * If the user has given a response they will be told to wait for host
+     */
     private void waitingText(){
         if(getSessionDIFF() == "") mWaitingText.setVisibility(View.GONE);
         else mWaitingText.setVisibility(View.VISIBLE);
 
     }
 
-    //Returns the name of the session from the main fragment bundle
+
+
+    /**
+     * @return name of the session from the main fragment bundle
+     */
     private String getSessionNAME(){
         Bundle arguments = getArguments();
         String name = arguments.getString("NAME");
         return name;
     }
 
+    /**
+     * @return the modified email with ',' from firebase
+     */
     @NonNull
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');

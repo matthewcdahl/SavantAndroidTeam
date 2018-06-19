@@ -20,14 +20,24 @@ import com.savant.savantandroidteam.R;
 
 import java.util.List;
 
+/**
+ *
+ *
+ * Adapter for the recycler view on the poker results page
+ *
+ */
+
 public class PokerResultsAdapter extends RecyclerView.Adapter<PokerResultsAdapter.ViewHolder> {
 
     private List<ResultItem> listItems;
     private Context context;
 
 
-
-
+    /**
+     *
+     * @param listItems all the current responses in the form of ResultItems
+     * @param context the context of the results page
+     */
     public PokerResultsAdapter(List<ResultItem> listItems, Context context) {
         this.listItems = listItems;
         this.context = context;
@@ -45,19 +55,10 @@ public class PokerResultsAdapter extends RecyclerView.Adapter<PokerResultsAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final ResultItem listItem = listItems.get(position);
 
-
         holder.result.setText(listItem.getAnimal());
         holder.name.setText(listItem.getName());
         holder.pic.setImageResource(mThumbIds[Integer.parseInt(listItem.getPicId())]);
 
-
-
-        /*holder.linearLayout.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(final View view){
-                handleClick(position, view);
-            }
-        });*/
     }
 
     @Override
@@ -79,10 +80,6 @@ public class PokerResultsAdapter extends RecyclerView.Adapter<PokerResultsAdapte
             //linearLayout = (LinearLayout) itemView.findViewById(R.id.linear_layout_test);
         }
 
-    }
-
-    private void handleClick(int position, final View view){
-        Log.d("POSSS", Integer.toString(position));
     }
 
     private Integer[] mThumbIds = {

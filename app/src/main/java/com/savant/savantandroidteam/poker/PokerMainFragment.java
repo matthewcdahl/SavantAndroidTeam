@@ -39,14 +39,14 @@ import java.util.List;
 
 public class PokerMainFragment extends Fragment {
 
-    //Firebase
-    FirebaseDatabase mDatabase;
-    DatabaseReference mPoker;
+    //Firebase Declarations
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference mPoker;
     private FirebaseAuth mAuth;
     private PokerHomebase mPokerHomebase;
 
 
-    //UI
+    //UI Declarations
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
     private List<SessionItem> sessionItems;
@@ -65,13 +65,13 @@ public class PokerMainFragment extends Fragment {
 
 
 
-        //Firebase
+        //Firebase Initializations
         mDatabase = FirebaseDatabase.getInstance();
         mPoker = mDatabase.getReference("poker");
         sessionItems = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
 
-        //UI
+        //UI Initializations
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -91,12 +91,15 @@ public class PokerMainFragment extends Fragment {
             public void onCancelled(DatabaseError databaseError) { }
         });
 
-
-
         return view;
     }
 
-    //Menu with add button
+    /**
+     *
+     * @param menu the menu to inflate
+     * @param inflater
+     * This is the menu with the add option
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.poker_menu, menu);
@@ -114,18 +117,20 @@ public class PokerMainFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    //Recycler view adapting
+    /**
+     * Initialize the adapter for the recycler view
+     */
     private void addSessionsToView(final DataSnapshot ss){
         sessionItems = mPokerHomebase.getSessions();
         adapter = new PokerAdapter(sessionItems, getContext(), ss);
         mRecyclerView.setAdapter(adapter);
 
+        //This is the code for the swipe to delete
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;
             }
-
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 //mMeetingsHomebase.deleteMeeting();
@@ -141,38 +146,27 @@ public class PokerMainFragment extends Fragment {
                 }
 
             }
-
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
                 final float ALPHA_FULL = 1.0f;
-
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
                     // Get RecyclerView item from the ViewHolder
                     View itemView = viewHolder.itemView;
-
                     Paint p = new Paint();
                     Bitmap icon;
-
-
                     icon = BitmapFactory.decodeResource(
                             getContext().getResources(), R.drawable.baseline_delete_sweep_black_36dp);
-
                     /* Set your color for negative displacement */
                     p.setColor(getResources().getColor(R.color.swipeDeleteBack));
-
                     // Draw Rect with varying left side, equal to the item's right side
                     // plus negative displacement dX
                     c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
                             (float) itemView.getRight(), (float) itemView.getBottom(), p);
-
                     //Set the image icon for Left swipe
                     c.drawBitmap(icon,
                             (float) itemView.getRight() - convertDpToPx(16) - icon.getWidth(),
                             (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - icon.getHeight()) / 2,
                             p);
-
-
                     // Fade out the view as it is swiped out of the parent's bounds
                     final float alpha = ALPHA_FULL - Math.abs(dX) / (float) viewHolder.itemView.getWidth();
                     viewHolder.itemView.setAlpha(alpha);
@@ -185,10 +179,17 @@ public class PokerMainFragment extends Fragment {
         }).attachToRecyclerView(mRecyclerView);
     }
 
+    /**
+     * Converting dp to pixels
+     */
     private int convertDpToPx(int dp) {
         return Math.round(dp * (getResources().getDisplayMetrics().xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
+
+    /**
+     * Firebase initializing for the session
+     */
     private void addSession(){
         if(mPokerHomebase == null){ // need to wait for loading to prevent data from not being initialized
             Toast.makeText(getContext(), "Wait for connection...", Toast.LENGTH_LONG).show();
@@ -223,7 +224,9 @@ public class PokerMainFragment extends Fragment {
 
     }
 
-    //Switch to the host fragment with with name and id bundled
+    /**
+     * Switch to the host fragment with with name and id bundled
+     */
     private void startSession(String id, String name){
         PokerHostFragment fragment = new PokerHostFragment();
         Bundle arguments = new Bundle();
@@ -235,18 +238,33 @@ public class PokerMainFragment extends Fragment {
         ft.addToBackStack(null).commit();
     }
 
+    /**
+     *
+     * @return the last session id
+     * for example if there are 3 sessions active this will return 4 if the 3rd session
+     * id is 3
+     */
     private String getLastSessionID(){
         /*if(rawNumberOfSessions == null) return 0;
         else return Integer.parseInt(rawNumberOfSessions);*/
         return mPokerHomebase.getLastSession();
     }
 
+    /**
+     *
+     * @param str this is a string that is a number
+     * @return a str incremented by one
+     * for example if input is "7" this will return "8"
+     */
     private String addOneToString(String str){
         int i = Integer.parseInt(str);
         i++;
         return Integer.toString(i);
     }
 
+    /**
+     * If there are no current sessions the noCurrentSessions text will appear
+     */
     private void setStartText(){
         if(mPokerHomebase.getNumberOfSessions() == 0){
             mNoCurrentText.setVisibility(View.VISIBLE);
@@ -258,6 +276,10 @@ public class PokerMainFragment extends Fragment {
         }
     }
 
+    /**
+     *
+     * @return the current users email with ',' instead of '.'
+     */
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }

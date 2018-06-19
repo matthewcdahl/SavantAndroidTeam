@@ -28,20 +28,12 @@ public class PokerHomebase {
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
     private DatabaseReference mUsersRef;
-    private String mPicId;
 
 
     //Private Variable for inner use
     public DataSnapshot mDataSnapshot;
     private ArrayList<Tuple> usersPics = new ArrayList<>();
 
-    public PokerHomebase(){
-        mDatabase = FirebaseDatabase.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-        mRootRef = mDatabase.getReference("poker");
-        mDataSnapshot = getSnapshot();
-        mUsersRef = mDatabase.getReference("users");
-    }
 
     public PokerHomebase(DataSnapshot ss){ // For loading purposes this will help speed things along if the snapshot is available
         mDatabase = FirebaseDatabase.getInstance();
@@ -221,32 +213,6 @@ public class PokerHomebase {
         return name;
     }
 
-
-
-    //Converts the user response to animals
-    public String getResultAnimals(String id){
-
-        String rtn = "";
-        int idPos = getPosId(id);
-        List<SessionItem> list = getSessions();
-        ArrayList<Tuple> res = list.get(idPos).getResponses();
-        for (int i = 0; i < res.size(); i++) {
-            String animal = "";
-            if(res.get(i).getResponse().equals("1")) animal = "Mouse";
-            else if(res.get(i).getResponse().equals("2")) animal = "Groundhog";
-            else if(res.get(i).getResponse().equals("3")) animal = "Fox";
-            else if(res.get(i).getResponse().equals("5")) animal = "Lion";
-            else if(res.get(i).getResponse().equals("8")) animal = "Buffalo";
-            else if(res.get(i).getResponse().equals("13")) animal = "Elephant";
-            else if(res.get(i).getResponse().equals("21")) animal = "Honey Badger";
-            else animal = res.get(i).getResponse();
-
-            rtn += animal + "\n";
-        }
-
-        return rtn;
-    }
-
     public String getName(int pos){
 
         List<SessionItem> list = getSessions();
@@ -262,27 +228,10 @@ public class PokerHomebase {
         return "";
     }
 
-    public String getUserName(){
-        String email = mAuth.getCurrentUser().getEmail();
-        String hold = email.substring(0, email.indexOf("."));
-        String userName = hold.substring(0, 1).toUpperCase() + hold.substring(1);
-        return userName;
-    }
-
     public void removeSession(String id){
         mRootRef.child(id).removeValue();
     }
 
-    public boolean isSessionActive(String id){
-
-        List<SessionItem> list = getSessions();
-        for(int i = 0; i<list.size(); i++){
-            if(list.get(i).getId().equals(id)){
-                return true;
-            }
-        }
-        return false;
-    }
 
     public int getIdPos(int pos){
 
@@ -301,27 +250,6 @@ public class PokerHomebase {
 
     }
 
-    public List<ResultItem> getResults(){
-        List<ResultItem> finalList = new ArrayList<>();
-        //DataSnapshot ss = getSnapshot();
-        Iterable<DataSnapshot> children = mDataSnapshot.getChildren();
-
-
-        for(DataSnapshot child: children) {
-
-            Iterable<DataSnapshot> metaData = child.getChildren();
-            ResultItem toAdd = new ResultItem();
-            toAdd.setName(child.getKey());
-            toAdd.setResult(child.getValue().toString());
-            toAdd.setPicId(getUserPicture(child.getKey()));
-
-            finalList.add(toAdd);
-
-
-        }
-        //printResultsArrayList(finalList);
-        return finalList;
-    }
 
     private String getUserPicture(final String name){
         for(int i = 0; i<usersPics.size(); i++){
@@ -332,12 +260,6 @@ public class PokerHomebase {
         return "15";
     }
 
-    private boolean namesAreEqual(String email, String name){
-        String fn = email.substring(0, email.indexOf(","));
-        fn = fn.substring(0,1).toUpperCase() + fn.substring(1);
-        if(fn.equals(name)) return true;
-        else return false;
-    }
 
     //For debugging purposes - do not use in distribution
     private void printResultsArrayList(List<ResultItem> arr){

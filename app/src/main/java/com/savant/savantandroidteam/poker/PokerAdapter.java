@@ -25,6 +25,12 @@ import com.savant.savantandroidteam.R;
 
 import java.util.List;
 
+/**
+ *
+ * This is the adapter for the poker main recycler view
+ *
+ */
+
 public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> {
 
     private List<SessionItem> listItems;
@@ -89,11 +95,16 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
             sessionStatus = "OPEN";
         }
 
+        //These are converting dp to pixels for use in the set margins
         Resources r = context.getResources();
         int px6 = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, r.getDisplayMetrics());
         int px3 = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, r.getDisplayMetrics());
 
 
+        /*The pupose of this code is to set the white margins on the recycler view
+           It really is not needed but makes it look a little bit better on the eye
+           I have done it programatically so the first item and last item can be handled properly
+        */
         if(listItems.size() == 1){
             setMargins(holder.linearLayout, 0,px6,0,px6);
         }
@@ -108,6 +119,7 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
         String hostModEmail = listItem.getHost();
         String nickname;
         System.out.println("hostModEmail: " + hostModEmail);
+        //This if statement is to stop the code from breaking becuase the database connection had not been made yet
         if(rHb!=null && hostModEmail!="") nickname = rHb.getNickname(hostModEmail);
         else nickname = "Loading...";
 
@@ -121,6 +133,9 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
         });
     }
 
+    /**
+     * This will set the margins of any type of view - my use is for linear layouts
+     */
     private void setMargins (View view, int left, int top, int right, int bottom) {
         if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -129,6 +144,10 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
         }
     }
 
+    /**
+     *
+     * @return the number of current sessions
+     */
     @Override
     public int getItemCount() {
         return listItems.size();
@@ -150,6 +169,13 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
 
     }
 
+    /**
+     *
+     * @param position of the touched session
+     * @param view
+     * Load up the appropriate fragment depending on which session is tapped as well as if the user
+     * is a host of the session or not. And also to check whether or not the session has been revealed.
+     */
     private void handleClick(int position, final View view){
 
         if(hb.isRevealed(position)){

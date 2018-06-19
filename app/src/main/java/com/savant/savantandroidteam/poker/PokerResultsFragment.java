@@ -183,12 +183,12 @@ public class PokerResultsFragment extends Fragment {
         return view;
     }
 
+    //Menu creation and click handling
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.poker_results_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -218,27 +218,31 @@ public class PokerResultsFragment extends Fragment {
     }
 
 
-    //Get session id from main fragment
+
+
+    /**
+     *
+     * @return the current session ID from the bundled arguments from main fragment
+     */
     private String getSession() {
         Bundle arguments = getArguments();
         String session = arguments.getString("ID");
         return session;
     }
 
-    private String getSessionName(String id) {
-        Bundle arguments = getArguments();
-        String sessionName = arguments.getString("NAME");
-        return sessionName;
-    }
 
-
-    //remove session from firebase and listeners should take care of the rest
+    /**
+     * remove session from firebase and listeners should take care of the rest
+     */
     private void deleteSession() {
         String id = getSession();
         newHomebase.removeSession(id);
     }
 
-    //return to main fragment
+    /**
+     * @param view current
+     * go to the main fragment in poker
+     */
     private void goToMain(View view) {
         AppCompatActivity activity = (AppCompatActivity) view.getContext();
         PokerMainFragment fragment = new PokerMainFragment();
@@ -248,12 +252,17 @@ public class PokerResultsFragment extends Fragment {
     }
 
 
-    //name of the session
+    /**
+     * Set the name of the session in the UI
+     */
     private void setName() {
         String name = newHomebase.getResultSessionName(getSession());
         sessionName.setText(name);
     }
 
+    /**
+     * Initialize the adapter for the recycler view of responses
+     */
     private void addSessionsToView() {
         resultItems = newHomebase.getResults();
         adapter = new PokerResultsAdapter(resultItems, getContext());

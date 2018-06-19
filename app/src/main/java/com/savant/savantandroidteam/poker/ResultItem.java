@@ -16,6 +16,7 @@ import java.util.ArrayList;
 *
 */
 
+
 public class ResultItem {
 
     private String name, result, picId, animal;
