@@ -1,4 +1,4 @@
-# SavantAndroidTeam - Andorid APP
+# SavantAndroidTeam - Android APP
 
 Made for the use of Savant's Android Team
 
