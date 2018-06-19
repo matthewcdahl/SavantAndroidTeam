@@ -38,21 +38,19 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MeetingsHostFragment extends Fragment {
 
-    //UI
+    //UI Declarations
     private EditText mNameET;
     private EditText mPlaceET;
     private Button mDateBtn;
     private Button mTimeBtn;
     private EditText mDescriptionET;
-    private boolean isEdited;
-    private String idIfEdited;
 
-    //Firebase
+    //Firebase Declarations
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRootRef;
     private DatabaseReference mMeetingsRef;
 
-    //TOOLBAR
+    //TOOLBAR Declarations
     private ActionBar masterBarHolder;
     Toolbar toolbar;
 
@@ -69,7 +67,7 @@ public class MeetingsHostFragment extends Fragment {
 
 
 
-        //TOOLBAR
+        //TOOLBAR Initializations
         masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
         masterBarHolder.hide();
 
@@ -86,7 +84,7 @@ public class MeetingsHostFragment extends Fragment {
 
 
 
-        //UI
+        //UI Initializations
         mNameET = (EditText) view.findViewById(R.id.et_meetings_host_name);
         mPlaceET = (EditText) view.findViewById(R.id.et_meetings_host_place);
         mDateBtn = (Button) view.findViewById(R.id.btn_meetings_host_date);
@@ -94,10 +92,8 @@ public class MeetingsHostFragment extends Fragment {
         mDescriptionET = (EditText) view.findViewById(R.id.et_meetings_host_desc);
         mDescriptionET.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mDescriptionET.setRawInputType(InputType.TYPE_CLASS_TEXT);
-        isEdited = false;
-        idIfEdited = "00";
 
-        //Firebase
+        //Firebase Initializations
         mDatabase = FirebaseDatabase.getInstance();
         mRootRef = mDatabase.getReference();
         mMeetingsRef = mRootRef.child("meetings");
@@ -129,15 +125,14 @@ public class MeetingsHostFragment extends Fragment {
     public void onStart(){
         super.onStart();
         loadInfo();
-
     }
 
+    //Menu for submitting the meeting
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.meetings_submit_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
 
@@ -150,6 +145,9 @@ public class MeetingsHostFragment extends Fragment {
     }
 
 
+    /**
+     * Will upload the the meeting to firebase and do all checks to make sure everyting is filled in
+     */
     private void submitMeeting(){
         InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
@@ -181,6 +179,9 @@ public class MeetingsHostFragment extends Fragment {
     }
 
 
+    /**
+     * Actually connecting with firebase to submit the meeting
+     */
     private void uploadMeeting(){
         String id = "";
         boolean isEdit = false;
@@ -216,6 +217,9 @@ public class MeetingsHostFragment extends Fragment {
 
     }
 
+    /**
+     * Switch to the main fragment
+     */
     private void switchToMain(){
         MeetingsMainFragment fragment = new MeetingsMainFragment();
         final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -223,6 +227,9 @@ public class MeetingsHostFragment extends Fragment {
         ft.commit();
     }
 
+    /**
+     * Save all of the info so when switching to the time or calandar fragment it can all be saved
+     */
     private void saveInfo(){
         SharedPreferences.Editor preferences = getContext().getSharedPreferences("MeetingPrefs", MODE_PRIVATE).edit();
         preferences.putString("name", mNameET.getText().toString());
@@ -235,21 +242,22 @@ public class MeetingsHostFragment extends Fragment {
         preferences.apply();
 
     }
-    //TODO ADD COMMENTS
+
+    /**
+     * When coming back from the time or calandar fragments or from and edit request this will populate
+     * all of the edit texts and the buttons
+     */
     private void loadInfo(){
         SharedPreferences preferences = getContext().getSharedPreferences("MeetingPrefs", MODE_PRIVATE);
 
         String edit = preferences.getString("isEdited", "false");
         if(edit.equals("true")){
-            isEdited = true;
-            idIfEdited = preferences.getString("id", "000");
             SharedPreferences.Editor prefsExtra = getContext().getSharedPreferences("MeetingPrefsExtra", MODE_PRIVATE).edit();
             prefsExtra.putString("id", preferences.getString("id", ""));
             prefsExtra.putString("time", preferences.getString("time", ""));
             prefsExtra.putString("date", preferences.getString("date", ""));
             prefsExtra.apply();
         }
-        else isEdited = false;
 
         mNameET.setText(preferences.getString("name", ""));
         mPlaceET.setText(preferences.getString("place", ""));
@@ -261,6 +269,7 @@ public class MeetingsHostFragment extends Fragment {
 
     }
 
+    //Clear all of the shared prefrences when done using them
     private void clearInfo(String prefName){
         getContext().getSharedPreferences(prefName, 0).edit().clear().commit();
     }

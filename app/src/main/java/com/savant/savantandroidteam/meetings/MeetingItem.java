@@ -4,6 +4,10 @@ import com.savant.savantandroidteam.poker.Tuple;
 
 import java.util.ArrayList;
 
+/**
+ * This will store all info related to a meeting
+ */
+
 public class MeetingItem {
 
     private String name, desc, date, time, id, place;

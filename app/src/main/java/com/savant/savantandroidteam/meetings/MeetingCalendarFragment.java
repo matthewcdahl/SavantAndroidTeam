@@ -51,6 +51,7 @@ public class MeetingCalendarFragment extends Fragment {
 
         mCalendar = (CalendarView) view.findViewById(R.id.calendarView);
 
+        //When a date is selected change it to acceptable format in firebase and switch back
         mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {

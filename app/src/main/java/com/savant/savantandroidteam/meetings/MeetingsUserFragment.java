@@ -33,14 +33,15 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MeetingsUserFragment extends Fragment {
 
+    //UI and Internal Declarations
     private TextView mNameText;
     private TextView mPlaceText;
     private TextView mIDText;
     private TextView mDescText;
     private boolean isDeleted;
     private String meetingID;
-    private boolean dialogIsOpen;
 
+    //Firebase Declarations
     private MeetingsHomebase mMeetingHomebase;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mMeetingRef;
@@ -76,6 +77,7 @@ public class MeetingsUserFragment extends Fragment {
         //Abstract toolbar fragment
 
 
+        //UI Initializations
         mNameText = (TextView) view.findViewById(R.id.tv_meeting_user_name);
         mPlaceText = (TextView) view.findViewById(R.id.tv_meeting_user_place);
         mIDText = (TextView) view.findViewById(R.id.tv_meeting_user_id);
@@ -83,9 +85,9 @@ public class MeetingsUserFragment extends Fragment {
         mDescText.setMovementMethod(new ScrollingMovementMethod());
         isDeleted = false;
         meetingID = getMeetingID();
-        dialogIsOpen = false;
 
 
+        //Firebase Initializations
         mDatabase = FirebaseDatabase.getInstance();
         mMeetingRef = mDatabase.getReference("meetings");
         mMeetingRef.addValueEventListener(new ValueEventListener() {
@@ -101,14 +103,9 @@ public class MeetingsUserFragment extends Fragment {
 
                 }
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
-
-
 
         return view;
     }
@@ -128,6 +125,9 @@ public class MeetingsUserFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * set the text views for the meeting information
+     */
     private void setTextViews(){
         int pos = getPosition();
         mNameText.setText(mMeetingHomebase.getName(pos));
@@ -136,19 +136,34 @@ public class MeetingsUserFragment extends Fragment {
         mIDText.setText(mMeetingHomebase.getDate(pos) + " " + mMeetingHomebase.getTime(pos));
     }
 
+    /**
+     *
+     * @return current position of the meeting
+     */
     private int getPosition(){
         Bundle args = getArguments();
         return args.getInt("meetingPos");
     }
+
+    /**
+     *
+     * @return the randomized id of the meeting
+     */
     private String getMeetingID(){
         Bundle args = getArguments();
         return args.getString("meetingID");
     }
 
+    /**
+     * delete the meeting from firebase
+     */
     private void deleteMeeting(){
         mMeetingHomebase.deleteMeeting(getPosition());
     }
 
+    /**
+     * switch to the host framgent and save the info that needs to be carried over
+     */
     private void editMeeting(){
         MeetingsHostFragment fragment = new MeetingsHostFragment();
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -160,6 +175,9 @@ public class MeetingsUserFragment extends Fragment {
 
     }
 
+    /**
+     * Swich to meetings main fragment
+     */
     private void switchToMain(){
         MeetingsMainFragment fragment = new MeetingsMainFragment();
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -167,6 +185,11 @@ public class MeetingsUserFragment extends Fragment {
         ft.commit();
     }
 
+    /**
+     *
+     * @param snapshot
+     * @return true if the current meeting exists
+     */
     private boolean isDeleted(DataSnapshot snapshot){
         Iterable<DataSnapshot> iter = snapshot.getChildren();
         if(iter == null) return true;
@@ -185,6 +208,9 @@ public class MeetingsUserFragment extends Fragment {
         return true;
     }
 
+    /**
+     * will save all of the meeting info for edits in shared prefrences
+     */
     private void saveInfo(){
         SharedPreferences.Editor preferences = getContext().getSharedPreferences("MeetingPrefs", MODE_PRIVATE).edit();
         preferences.putString("name", mMeetingHomebase.getName(getPosition()));

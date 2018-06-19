@@ -52,6 +52,10 @@ public class MeetingsHomebase {
         return mDataSnapshot;
     }
 
+    /**
+     *
+     * @return a list of all current scheduled meetings and their info in the form of a MeetingIem list
+     */
     public List<MeetingItem> getMeetings() {
         List<MeetingItem> finalList = new ArrayList<>();
         DataSnapshot ss = getSnapshot();
@@ -85,11 +89,7 @@ public class MeetingsHomebase {
         return finalList;
     }
 
-    public MeetingItem getClickedSession(int position) {
-        List<MeetingItem> arr = getMeetings();
-        return arr.get(position);
-    }
-
+    //For debugging purposed only!
     private void printArrayList(List<SessionItem> arr) {
         for (int i = 0; i < arr.size(); i++) {
             SessionItem curr = arr.get(i);

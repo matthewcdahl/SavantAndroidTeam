@@ -153,6 +153,12 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
         return hb.getId(pos);
     }
 
+    /**
+     *
+     * @param meetingDate the date of the scheduled meeting
+     * @param meetingTime the time of the scheduled meeting
+     * @return true if the meeting has passed current time
+     */
     private boolean meetingDateHasPassed(String meetingDate, String meetingTime) {
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
@@ -173,7 +179,8 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsAdapter.ViewHo
 
 
 
-        //This is beautiful but what does it all mean?
+        //This is beautiful but what does it all mean
+        //It just checks if the meeting time has passed real world time and will return true if so
         if (currYear > meetingYear) return true;
         else if (currYear == meetingYear) {
             if (currMonth > meetingMonth) return true;

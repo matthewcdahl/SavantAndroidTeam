@@ -55,11 +55,12 @@ public class MeetingTimeFragment extends Fragment {
         mTimePicker = (TimePicker) view.findViewById(R.id.timeView);
         mSetTime = (Button) view.findViewById(R.id.button_set_time);
 
+        //All of this code is formatting to get the time in 12 hour format.
         mSetTime.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 //Switch to meeting host Fragment
-                String minString = "00";
+                String minString;
                 int hour = mTimePicker.getCurrentHour();
                 if(hour>12) hour = hour %12;
                 if(hour == 0) hour = 12;

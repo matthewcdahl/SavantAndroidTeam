@@ -40,16 +40,16 @@ import java.util.List;
 
 public class MeetingsMainFragment extends Fragment {
 
+    //Firebase Declarations
     FirebaseDatabase mDatabase;
     DatabaseReference mMeetingsRef;
-    private FirebaseAuth mAuth;
+    private MeetingsHomebase mMeetingsHomebase;
 
 
+    //UI Declarations
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
     private List<MeetingItem> meetingItems;
-    private MeetingsHomebase mMeetingsHomebase;
-
     private TextView mNoCurrentText;
     private TextView mClickPlusText;
 
@@ -66,7 +66,6 @@ public class MeetingsMainFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance();
         mMeetingsRef = mDatabase.getReference("meetings");
         meetingItems = new ArrayList<>();
-        mAuth = FirebaseAuth.getInstance();
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -111,12 +110,13 @@ public class MeetingsMainFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    //DataSnapshot { key = 1, value = {host=Matthew, name=m, responses={Matthew=2}} }
+    //Initialize the adapter to populate the recycler view
     private void addMeetingsToView() {
         meetingItems = mMeetingsHomebase.getMeetings();
         adapter = new MeetingsAdapter(meetingItems, getContext());
         mRecyclerView.setAdapter(adapter);
 
+        //Code for the swipe to delete
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -133,28 +133,6 @@ public class MeetingsMainFragment extends Fragment {
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                /*if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    // Get RecyclerView item from the ViewHolder
-                    View itemView = viewHolder.itemView;
-
-                    Paint p = new Paint();
-                    p.setColor(getContext().getResources().getColor(R.color.red));
-                    if (dX > 0) {
-                        *//* Set your color for positive displacement *//*
-
-                        // Draw Rect with varying right side, equal to displacement dX
-                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
-                                (float) itemView.getBottom(), p);
-                    } else {
-                        *//* Set your color for negative displacement *//*
-
-                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
-                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
-                    }
-
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                }*/
                 final float ALPHA_FULL = 1.0f;
 
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
@@ -196,33 +174,33 @@ public class MeetingsMainFragment extends Fragment {
 
     }
 
+    /**
+     *
+     * @param dp to convert
+     * @return the px equal
+     */
     private int convertDpToPx(int dp) {
         return Math.round(dp * (getResources().getDisplayMetrics().xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
 
 
+    /**
+     * All this does is start up the Host fragment to create a meeting
+     */
     private void addMeeting() {
-
-        startMeeting();
-    }
-
-
-    private void startMeeting(/*String id, String name*/) {
-
         SharedPreferences.Editor edit = getContext().getSharedPreferences("MeetingPrefsExtra", Context.MODE_PRIVATE).edit();
         edit.putString("isEdited", "false");
         edit.apply();
 
         MeetingsHostFragment fragment = new MeetingsHostFragment();
         Bundle arguments = new Bundle();
-        //arguments.putString("ID", id);
-        //arguments.putString("NAME", name);
         fragment.setArguments(arguments);
         final FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, fragment);
         ft.addToBackStack(null).commit();
     }
 
+    //If there are no current meetings this will diplay the starter text
     private void setStartText() {
         if (mMeetingsHomebase.getNumberOfSessions() == 0) {
             mNoCurrentText.setVisibility(View.VISIBLE);
