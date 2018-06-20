@@ -79,7 +79,7 @@ public class GettingStartedFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("https://wiki.savant.com/display/ENG/Rules%2C+Standards%2C+Known+Issues%2C+FQA"));
+                        Uri.parse("https://wiki.savant.com/display/ENG/Rules%2C+Standards%2C+Known+Issues%2C+FAQ"));
                 startActivity(browserIntent);
             }
         });

@@ -25,7 +25,7 @@ import java.util.List;
 
 public class PokerHomebase {
 
-    //Firebase
+    //Firebase Declarations
     private FirebaseDatabase mDatabase;
     private FirebaseAuth mAuth;
     private DatabaseReference mRootRef;
@@ -39,6 +39,7 @@ public class PokerHomebase {
 
 
     public PokerHomebase(DataSnapshot ss, Context context){ // For loading purposes this will help speed things along if the snapshot is available
+        //Firebase Initializations
         this.context = context;
         mDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -70,6 +71,9 @@ public class PokerHomebase {
 
     }
 
+    /**
+     * This will update mDataSnapshot with the most current one
+     */
     public DataSnapshot getSnapshot(){
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -78,16 +82,18 @@ public class PokerHomebase {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
         return mDataSnapshot;
     }
 
 
-    //This is the home for reading from firebase. It takes the snapshot and
-    //puts it into a list of SessionItems
+
+    /**
+     *
+     * @return This is the home for reading from firebase. It takes the snapshot and
+     * puts it into a list of SessionItems
+     */
     public List<SessionItem> getSessions(){
         List<SessionItem> finalList = new ArrayList<>();
         DataSnapshot ss = getSnapshot();
@@ -137,7 +143,10 @@ public class PokerHomebase {
         return arr.get(position);
     }
 
-    //For debugging purposes - do not use in distribution
+    /**
+     * //For debugging purposes - do not use in distribution
+     * @param arr
+     */
     private void printArrayList(List<SessionItem> arr){
         for(int i = 0; i<arr.size(); i++){
             SessionItem curr = arr.get(i);
@@ -166,10 +175,19 @@ public class PokerHomebase {
         }
     }
 
+    /**
+     *
+     * @return then number of current sessions
+     */
     public int getNumberOfSessions(){
         return getSessions().size();
     }
 
+    /**
+     *
+     * @param position of the session
+     * @return true if the phone user is the host of the session
+     */
     public boolean isHostOfSession(int position){
 
         String host = getSessions().get(position).getHost();
@@ -180,6 +198,11 @@ public class PokerHomebase {
     }
 
 
+    /**
+     *
+     * @param position of the session
+     * @return true if the host has clicked show results
+     */
     public boolean isRevealed(int position){
         if(position == -1) return false;
 
@@ -188,6 +211,10 @@ public class PokerHomebase {
         else return true;
     }
 
+    /**
+     *
+     * @return the number above the highest numbered session
+     */
     public String getLastSession(){
 
         List<SessionItem> list = getSessions();
@@ -196,33 +223,23 @@ public class PokerHomebase {
         else return list.get(list.size()-1).getId();
     }
 
-    public String getResultNames(String id){
 
-        String rtn = "";
-        int idPos = getPosId(id);
-        List<SessionItem> list = getSessions();
-        ArrayList<Tuple> res = list.get(idPos).getResponses();
-        for (int i = 0; i < res.size(); i++) {
-            rtn += res.get(i).getName() + ":" + "\n";
-        }
-
-        return rtn;
-    }
-
-    public String getResultSessionName(String id){
-
-        int idPos = getPosId(id);
-        List<SessionItem> list = getSessions();
-        String name = list.get(idPos).getName();
-        return name;
-    }
-
+    /**
+     *
+     * @param pos of the session
+     * @return the name of the session in position pos
+     */
     public String getName(int pos){
 
         List<SessionItem> list = getSessions();
         return list.get(pos).getName();
     }
 
+    /**
+     *
+     * @param pos
+     * @return the users response or if none the empty string
+     */
     public String getResponse(int pos){
         List<SessionItem> list = getSessions();
         ArrayList<Tuple> res = list.get(pos).getResponses();
@@ -232,11 +249,19 @@ public class PokerHomebase {
         return "";
     }
 
+    /**
+     *
+     * @param id of session to remove
+     */
     public void removeSession(String id){
         mRootRef.child(id).removeValue();
     }
 
 
+    /*
+    *
+    * Will search the list of sessions for the id of the pos given
+    */
     public int getIdPos(int pos){
 
         List<SessionItem> list = getSessions();
@@ -244,56 +269,29 @@ public class PokerHomebase {
         return Integer.parseInt(list.get(pos).getId());
     }
 
-    public int getPosId(String id){
 
-        List<SessionItem> list = getSessions();
-        for(int i = 0; i<list.size(); i++){
-            if(list.get(i).getId().equals(id)) return i;
-        }
-        return -1;
-
-    }
-
-
-    private String getUserPicture(final String name){
-        for(int i = 0; i<usersPics.size(); i++){
-            if(usersPics.get(i).getName().equals(name)){
-                return usersPics.get(i).getResponse();
-            }
-        }
-        return "15";
-    }
-
-
-    //For debugging purposes - do not use in distribution
-    private void printResultsArrayList(List<ResultItem> arr){
-        for(int i = 0; i<arr.size(); i++){
-            ResultItem curr = arr.get(i);
-            String name = curr.getName();
-            String result = curr.getResult();
-            //String picId = curr.getId();
-
-
-            Log.d("NAME", name);
-            Log.d("Result", result);
-            //Log.d("ID", id);
-
-
-        }
-    }
-
-
-
+    /**
+     *
+     * @param email to extrace name from
+     * @return the first name of the user
+     */
     private String extractName(String email){
         String fn = email.substring(0, email.indexOf(","));
         fn = fn.substring(0,1).toUpperCase() + fn.substring(1);
         return fn;
     }
 
+    /**
+     *
+     * @return users email with '.' replaced by ','
+     */
     private String getUserModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }
 
+    /**
+     * will remove all sessions if they are closed
+     */
     public void deleteAllClosedSessions(){
         boolean deletedAtLeastOneSession = false;
         List<SessionItem> list = getSessions();
