@@ -7,5 +7,9 @@
         android:title="Add Meeting"
         android:icon="@drawable/ic_add_white_24dp"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/delete_all_meetings"
+        android:title="Delete All Meetings"
+        app:showAsAction="never"/>
 
 </menu>

@@ -1,6 +1,8 @@
 package com.savant.savantandroidteam.meetings;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -101,6 +103,10 @@ public class MeetingsMainFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.add_meeting:
                 addMeeting();
+                break;
+            case R.id.delete_all_meetings:
+                deleteAllMeetings();
+                break;
 
         }
 
@@ -196,6 +202,36 @@ public class MeetingsMainFragment extends Fragment {
         ft.replace(R.id.fragment_container, fragment);
         ft.addToBackStack(null).commit();
     }
+
+    /**
+     * This will delete all of the meetings
+     */
+    private void deleteAllMeetings(){
+        if(mMeetingsHomebase.getNumberOfSessions() == 0){
+            Toast.makeText(getContext(), "No Meetings to Delete", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setCancelable(false);
+            builder.setTitle("Delete All?");
+            builder.setMessage("This will delete all meetings for everyone.\n\nWould you like to continue?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    mMeetingsHomebase.deleteAllMeetings();
+                    Toast.makeText(getContext(), "All Meetings Deleted", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            builder.show();
+        }
+    }
+
 
     //If there are no current meetings this will diplay the starter text
     private void setStartText() {

@@ -1,8 +1,10 @@
 package com.savant.savantandroidteam.poker;
 
+import android.content.Context;
 import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -33,9 +35,11 @@ public class PokerHomebase {
     //Private Variable for inner use
     public DataSnapshot mDataSnapshot;
     private ArrayList<Tuple> usersPics = new ArrayList<>();
+    private Context context;
 
 
-    public PokerHomebase(DataSnapshot ss){ // For loading purposes this will help speed things along if the snapshot is available
+    public PokerHomebase(DataSnapshot ss, Context context){ // For loading purposes this will help speed things along if the snapshot is available
+        this.context = context;
         mDatabase = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mRootRef = mDatabase.getReference("poker");
@@ -290,8 +294,19 @@ public class PokerHomebase {
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }
 
-
-
-
+    public void deleteAllClosedSessions(){
+        boolean deletedAtLeastOneSession = false;
+        List<SessionItem> list = getSessions();
+        for(SessionItem item: list){
+            if(item.getRevealed().equals("true")){
+                deletedAtLeastOneSession = true;
+                String itemID = item.getId();
+                DatabaseReference itemRef = mRootRef.child(itemID);
+                itemRef.removeValue();
+            }
+        }
+        if(deletedAtLeastOneSession) Toast.makeText(context, "All Closed Sessions Deleted", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(context, "No Closed Sessions to Delete", Toast.LENGTH_SHORT).show();
+    }
 
 }

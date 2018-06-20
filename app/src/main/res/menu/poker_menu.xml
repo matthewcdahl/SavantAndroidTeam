@@ -7,5 +7,9 @@
         android:title="Add Session"
         android:icon="@drawable/ic_add_white_24dp"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/delete_all_sessions_poker"
+        android:title="Delete All Closed"
+        app:showAsAction="never"/>
 
 </menu>

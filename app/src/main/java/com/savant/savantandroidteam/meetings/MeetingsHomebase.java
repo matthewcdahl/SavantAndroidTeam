@@ -157,4 +157,8 @@ public class MeetingsHomebase {
         mRootRef.child(toRemove).removeValue();
     }
 
+    public void deleteAllMeetings(){
+        mRootRef.removeValue();
+    }
+
 }

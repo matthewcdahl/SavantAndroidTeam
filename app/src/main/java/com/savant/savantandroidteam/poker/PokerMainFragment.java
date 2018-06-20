@@ -80,7 +80,7 @@ public class PokerMainFragment extends Fragment {
         mPoker.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mPokerHomebase = new PokerHomebase(dataSnapshot);
+                mPokerHomebase = new PokerHomebase(dataSnapshot, getContext());
                 addSessionsToView(dataSnapshot);
                 setStartText();
             }
@@ -108,6 +108,10 @@ public class PokerMainFragment extends Fragment {
         switch (item.getItemId()){
             case R.id.add_poker:
                 addSession();
+                break;
+            case R.id.delete_all_sessions_poker:
+                deleteAllSessions();
+                break;
 
         }
 
@@ -219,6 +223,13 @@ public class PokerMainFragment extends Fragment {
             startSession(numOfSessionsFinal, newSessionName);
         }
 
+    }
+
+    /**
+     * This will delete all the sessions in the recycler view and on firebase
+     */
+    private void deleteAllSessions(){
+        mPokerHomebase.deleteAllClosedSessions();
     }
 
     /**

@@ -253,8 +253,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private String getModifiedEmail(){
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
-        //TESTER comments
-        //hi
     }
 
 
@@ -329,13 +327,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String holder = currName + " (" + nickname + ")";
         name.setText(holder);
     }
-
-
-
-
-
-
-
 
 
 }

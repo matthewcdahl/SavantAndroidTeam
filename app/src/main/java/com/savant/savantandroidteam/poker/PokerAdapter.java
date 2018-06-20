@@ -47,7 +47,7 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
     public PokerAdapter(List<SessionItem> listItems, final Context context, DataSnapshot ss) {
         this.listItems = listItems;
         this.context = context;
-        hb = new PokerHomebase(ss);
+        hb = new PokerHomebase(ss, context);
         System.out.println("SS!!!!" + ss.toString()); //SS is the poker ss not the overall!!!!
         mAuth = FirebaseAuth.getInstance();
         userName = mAuth.getCurrentUser().getEmail();
@@ -64,7 +64,6 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 rHb = new PokerResultsHomebase(dataSnapshot);
-                System.out.println("11111: " + dataSnapshot.toString());
                 a.notifyDataSetChanged();
             }
             @Override
