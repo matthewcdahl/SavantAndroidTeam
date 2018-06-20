@@ -35,13 +35,13 @@ import com.savant.savantandroidteam.startup.LoginActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    //UI
+    //UI Declarations
     private DrawerLayout mDrawer;
     private NavigationView navView;
     private ActionBarDrawerToggle mDrawerToggle;
     public Toolbar toolbar;
 
-    //Firebase
+    //Firebase Declarations
     FirebaseAuth mAuth;
     FirebaseDatabase mDatabase;
     DatabaseReference mRootRef;
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(savedInstanceState!=null)System.out.println(savedInstanceState.toString());
 
         //Firebase initializations
         mAuth = FirebaseAuth.getInstance();
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setUpToolbar("Savant Android Wiki Links");
 
-        //If there was no saved fragment when the app was closed it will load up the getting started
+        //If there was no saved fragment when the app was closed it will load up the getting started fragment
         if(savedInstanceState == null) {
             NavigationView navigationView = findViewById(R.id.nav_view);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new GettingStartedFragment()).commit();
@@ -139,6 +140,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Set up drawer email
         setEmail();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
