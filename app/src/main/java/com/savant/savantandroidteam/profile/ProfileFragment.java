@@ -231,7 +231,7 @@ public class ProfileFragment extends Fragment {
         String nickname = mNickname.getText().toString().trim();
         mNickname.setText(nickname);
         if(nickname.length()==0 || nickname.length() > 14){
-            Toast.makeText(getContext(), "Invalid Length must be 1-14 characters, Emoji's count as 2", Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "Invalid Length must be 1-14 characters, Some Emoji's count as 2", Toast.LENGTH_LONG).show();
         }
         else if(mUserNickname.equals(nickname)){
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
