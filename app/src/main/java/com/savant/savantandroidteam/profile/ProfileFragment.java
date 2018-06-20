@@ -44,6 +44,7 @@ public class ProfileFragment extends Fragment {
     FirebaseDatabase db;
     DatabaseReference mUsersRef;
     DatabaseReference mUserRef;
+    private String mUserNickname;
 
     @Nullable
     @Override
@@ -137,12 +138,17 @@ public class ProfileFragment extends Fragment {
                        setProPic = true;
                    }
                    else if(id.getKey().equals("nickname")){
+                       mUserNickname = id.getValue().toString();
                        mNickname.setText(id.getValue().toString());
                        setNickname = true;
                    }
                }
                if(!setProPic)mImage.setImageResource(mThumbIds[15]);
-               if(!setNickname)mNickname.setText(getFirstName());
+               if(!setNickname){
+                   mNickname.setText(getFirstName());
+                   mUserNickname = getFirstName();
+               }
+
 
 
             }
@@ -226,6 +232,13 @@ public class ProfileFragment extends Fragment {
         mNickname.setText(nickname);
         if(nickname.length()==0 || nickname.length() > 14){
             Toast.makeText(getContext(), "Invalid Length must be 1-14 characters, Emoji's count as 2", Toast.LENGTH_LONG).show();
+        }
+        else if(mUserNickname.equals(nickname)){
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            setHasOptionsMenu(false);
+            Toast.makeText(getContext(), "Nothing Has been Changed", Toast.LENGTH_LONG).show();
+            mNickname.setCursorVisible(false);
         }
         else{
             InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
