@@ -4,7 +4,6 @@ package com.savant.savantandroidteam.meetings;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -30,9 +29,8 @@ import android.widget.EditText;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.savant.savantandroidteam.MainActivity;
+import com.savant.savantandroidteam.main.MainActivity;
 import com.savant.savantandroidteam.R;
-import com.savant.savantandroidteam.poker.PokerMainFragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
