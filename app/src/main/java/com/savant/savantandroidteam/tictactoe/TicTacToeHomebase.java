@@ -49,6 +49,8 @@ public class TicTacToeHomebase {
                     if (child2.getKey().equals("host")) toAdd.setHost(child2.getValue().toString());
                     else if (child2.getKey().equals("opp"))
                         toAdd.setOpp(child2.getValue().toString());
+                    else if (child2.getKey().equals("turn"))
+                        toAdd.setTurn(child2.getValue().toString());
                     else if (child2.getKey().equals("finished"))
                         toAdd.setFinished(child2.getValue().toString());
                     else if (child2.getKey().equals("tl"))
@@ -188,10 +190,13 @@ public class TicTacToeHomebase {
     public String getNextGameID(){
         List<TicTacToeItem> games = getGames();
         int size = games.size();
-        String currId = games.get(size-1).getName();
-        int currIdInt = Integer.parseInt(currId);
-        currIdInt++;
-        return Integer.toString(currIdInt);
+        if(size == 0) return "1";
+        else {
+            String currId = games.get(size - 1).getName();
+            int currIdInt = Integer.parseInt(currId);
+            currIdInt++;
+            return Integer.toString(currIdInt);
+        }
     }
 
 }

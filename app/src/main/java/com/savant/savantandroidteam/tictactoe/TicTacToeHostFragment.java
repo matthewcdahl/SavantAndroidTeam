@@ -151,11 +151,10 @@ public class TicTacToeHostFragment extends Fragment {
         DatabaseReference mGameRef = mTicTacToeRef.child(tttHB.getNextGameID());
         String host = tttHB.getNicknameOfDeviceUser();
 
-
-
         mGameRef.child("host").setValue(tttHB.getNicknameOfDeviceUser());
         mGameRef.child("opp").setValue(usersSpinner.getSelectedItem().toString());
         mGameRef.child("finished").setValue("false");
+        mGameRef.child("turn").setValue(tttHB.getNicknameOfDeviceUser());
 
     }
 

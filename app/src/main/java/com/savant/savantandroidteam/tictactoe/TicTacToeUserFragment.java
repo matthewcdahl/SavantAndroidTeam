@@ -170,7 +170,55 @@ public class TicTacToeUserFragment extends Fragment {
         mTL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //mTL.setImageResource();
+                mTL.setImageResource(R.drawable.ic_close_black_80dp);
+            }
+        });
+        mTC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTC.setImageResource(R.drawable.ic_close_black_80dp);
+            }
+        });
+        mTR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTR.setImageResource(R.drawable.ic_close_black_80dp);
+            }
+        });
+        mML.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mML.setImageResource(R.drawable.ic_close_black_80dp);
+            }
+        });
+        mMC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMC.setImageResource(R.drawable.ic_close_black_80dp);
+            }
+        });
+        mMR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMR.setImageResource(R.drawable.ic_close_black_80dp);
+            }
+        });
+        mBL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBL.setImageResource(R.drawable.ic_close_black_80dp);
+            }
+        });
+        mBC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBC.setImageResource(R.drawable.ic_close_black_80dp);
+            }
+        });
+        mBR.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBR.setImageResource(R.drawable.ic_close_black_80dp);
             }
         });
 
