@@ -1,6 +1,7 @@
 package com.savant.savantandroidteam.tictactoe;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -115,11 +116,14 @@ public class TicTacToeAdapter extends RecyclerView.Adapter<TicTacToeAdapter.View
     }
 
     private void handleClick(int position, final View view) {
+
+        SharedPreferences.Editor tttPrefs = context.getSharedPreferences("tictactoe", Context.MODE_PRIVATE).edit();
+        System.out.println(position);
+        tttPrefs.putString("gamePos", Integer.toString(position));
+        tttPrefs.commit();
+
         AppCompatActivity activity = (AppCompatActivity) view.getContext();
         TicTacToeUserFragment fragment = new TicTacToeUserFragment();
-        Bundle arguments = new Bundle();
-        arguments.putInt("gamePos", position);
-        fragment.setArguments(arguments);
         final FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, fragment);
         ft.commit();

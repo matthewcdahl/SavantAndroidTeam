@@ -48,7 +48,6 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
         this.listItems = listItems;
         this.context = context;
         hb = new PokerHomebase(ss, context);
-        System.out.println("SS!!!!" + ss.toString()); //SS is the poker ss not the overall!!!!
         mAuth = FirebaseAuth.getInstance();
         userName = mAuth.getCurrentUser().getEmail();
         for(int i = 0; i<userName.length(); i++){
@@ -85,7 +84,6 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
         String sessionStatus;
 
         if(hb.isRevealed(position)){ // Session is over
-            System.out.println(position);
             holder.linearLayout.setBackgroundColor(context.getResources().getColor(R.color.pokerSessionClosed));
             sessionStatus = "CLOSED";
         }
@@ -117,7 +115,6 @@ public class PokerAdapter extends RecyclerView.Adapter<PokerAdapter.ViewHolder> 
 
         String hostModEmail = listItem.getHost();
         String nickname;
-        System.out.println("hostModEmail: " + hostModEmail);
         //This if statement is to stop the code from breaking becuase the database connection had not been made yet
         if(rHb!=null && hostModEmail!="") nickname = rHb.getNickname(hostModEmail);
         else nickname = "Loading...";

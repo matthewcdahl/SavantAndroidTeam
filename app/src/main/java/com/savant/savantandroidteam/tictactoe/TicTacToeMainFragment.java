@@ -81,7 +81,7 @@ public class TicTacToeMainFragment extends Fragment {
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mTicTacToeHomebase = new TicTacToeHomebase(dataSnapshot);
+                mTicTacToeHomebase = new TicTacToeHomebase(dataSnapshot, getContext());
                 setStartText();
                 addGamesToView();
             }
@@ -116,7 +116,6 @@ public class TicTacToeMainFragment extends Fragment {
     //Initialize the adapter to populate the recycler view
     private void addGamesToView() {
         ticTacToeItems = mTicTacToeHomebase.getGames();
-        mTicTacToeHomebase.printArrayList(ticTacToeItems);
         adapter = new TicTacToeAdapter(ticTacToeItems, getContext());
         mRecyclerView.setAdapter(adapter);
 

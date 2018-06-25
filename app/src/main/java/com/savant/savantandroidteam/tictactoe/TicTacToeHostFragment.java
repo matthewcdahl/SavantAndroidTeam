@@ -56,6 +56,7 @@ public class TicTacToeHostFragment extends Fragment {
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRootRef;
     private TicTacToeHomebase tttHB;
+    private String gamePos;
 
     //TOOLBAR Declarations
     private ActionBar masterBarHolder;
@@ -96,7 +97,7 @@ public class TicTacToeHostFragment extends Fragment {
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                tttHB = new TicTacToeHomebase(dataSnapshot);
+                tttHB = new TicTacToeHomebase(dataSnapshot, getContext());
                 setupSpinner();
             }
             @Override
@@ -148,13 +149,16 @@ public class TicTacToeHostFragment extends Fragment {
     private void uploadGame(){
 
         DatabaseReference mTicTacToeRef = mRootRef.child("tictactoe");
+        System.out.println("Next GAME ID: " + tttHB.getNextGameID());
         DatabaseReference mGameRef = mTicTacToeRef.child(tttHB.getNextGameID());
+        gamePos = Integer.toString(tttHB.getGames().size());
         String host = tttHB.getNicknameOfDeviceUser();
+        String opp = usersSpinner.getSelectedItem().toString();
 
-        mGameRef.child("host").setValue(tttHB.getNicknameOfDeviceUser());
-        mGameRef.child("opp").setValue(usersSpinner.getSelectedItem().toString());
+        mGameRef.child("host").setValue(host);
+        mGameRef.child("opp").setValue(opp);
         mGameRef.child("finished").setValue("false");
-        mGameRef.child("turn").setValue(tttHB.getNicknameOfDeviceUser());
+        mGameRef.child("turn").setValue(host);
 
     }
 
@@ -163,6 +167,9 @@ public class TicTacToeHostFragment extends Fragment {
      */
     private void switchToUser(){
         TicTacToeUserFragment fragment = new TicTacToeUserFragment();
+        SharedPreferences.Editor prefs = getContext().getSharedPreferences("tictactoe", MODE_PRIVATE).edit();
+        System.out.println("GAME POS ON CREATE: " + gamePos);
+        prefs.putString("gamePos", gamePos);
         final FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, fragment);
         ft.commit();

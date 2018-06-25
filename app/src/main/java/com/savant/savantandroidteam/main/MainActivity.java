@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(savedInstanceState!=null)System.out.println(savedInstanceState.toString());
 
         //Firebase initializations
         mAuth = FirebaseAuth.getInstance();

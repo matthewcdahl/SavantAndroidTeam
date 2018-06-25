@@ -7,8 +7,10 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +34,7 @@ import com.savant.savantandroidteam.main.MainActivity;
 import com.savant.savantandroidteam.meetings.MeetingsHomebase;
 import com.savant.savantandroidteam.meetings.MeetingsHostFragment;
 import com.savant.savantandroidteam.meetings.MeetingsMainFragment;
+import com.savant.savantandroidteam.poker.PokerMainFragment;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -41,7 +45,9 @@ public class TicTacToeUserFragment extends Fragment {
     private ImageView mTL, mTC, mTR;
     private ImageView mML, mMC, mMR;
     private ImageView mBL, mBC, mBR;
-    private TextView mYourSymbol, mOppSymbol;
+    private TextView hostSymbol, oppSymbol;
+    private String hostNickname, oppNickname;
+    private String mostRecent;
 
 
 
@@ -64,7 +70,6 @@ public class TicTacToeUserFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_tictactoe_user, container, false);
 
         ((MainActivity) getActivity()).setTitle("Tic Tac Toe");
-        initializeBoard(view);
 
         //TOOLBAR
         masterBarHolder = ((MainActivity) getActivity()).getSupportActionBar();
@@ -93,7 +98,10 @@ public class TicTacToeUserFragment extends Fragment {
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                updateView();
+                if(TicTacToeUserFragment.this.isVisible()) {
+                    mTicTacToeHomebase = new TicTacToeHomebase(dataSnapshot, getContext());
+                    updateView();
+                }
             }
 
             @Override
@@ -101,6 +109,7 @@ public class TicTacToeUserFragment extends Fragment {
 
             }
         });
+        initializeBoard(view);
 
         return view;
     }
@@ -116,31 +125,6 @@ public class TicTacToeUserFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * set the text views for the meeting information
-     */
-    private void setTextViews(){
-        int pos = getPosition();
-        mNameText.setText(mTicTacToeHomebase.getName(pos));
-    }
-
-    /**
-     *
-     * @return current position of the meeting
-     */
-    private int getPosition(){
-        Bundle args = getArguments();
-        return args.getInt("meetingPos");
-    }
-
-    /**
-     * @return the randomized id of the meeting
-     */
-    private String getMeetingID() {
-        Bundle args = getArguments();
-        return args.getString("meetingID");
-    }
-
 
     /**
      * Swich to meetings main fragment
@@ -153,6 +137,20 @@ public class TicTacToeUserFragment extends Fragment {
     }
 
     private void updateView(){
+        mTL.setImageResource(mTicTacToeHomebase.getTTTatSpot("mTL"));
+        mTC.setImageResource(mTicTacToeHomebase.getTTTatSpot("mTC"));
+        mTR.setImageResource(mTicTacToeHomebase.getTTTatSpot("mTR"));
+        mML.setImageResource(mTicTacToeHomebase.getTTTatSpot("mML"));
+        mMC.setImageResource(mTicTacToeHomebase.getTTTatSpot("mMC"));
+        mMR.setImageResource(mTicTacToeHomebase.getTTTatSpot("mMR"));
+        mBL.setImageResource(mTicTacToeHomebase.getTTTatSpot("mBL"));
+        mBC.setImageResource(mTicTacToeHomebase.getTTTatSpot("mBC"));
+        mBR.setImageResource(mTicTacToeHomebase.getTTTatSpot("mBR"));
+
+        if(mTicTacToeHomebase.gameOver(mostRecent)){
+            Toast.makeText(getContext(), "GAME OVER!!!!", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -170,59 +168,84 @@ public class TicTacToeUserFragment extends Fragment {
         mTL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTL.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mTL, "mTL");
             }
         });
         mTC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTC.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mTC, "mTC");
             }
         });
         mTR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTR.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mTR, "mTR");
             }
         });
         mML.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mML.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mML, "mML");
             }
         });
         mMC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMC.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mMC, "mMC");
             }
         });
         mMR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mMR.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mMR, "mMR");
             }
         });
         mBL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBL.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mBL, "mBL");
             }
         });
         mBC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBC.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mBC, "mBC");
             }
         });
         mBR.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBR.setImageResource(R.drawable.ic_close_black_80dp);
+                handleBoardClick(mBR, "mBR");
             }
         });
 
-
-
     }
+
+    private void handleBoardClick(ImageView img, String pos){
+        String turn = mTicTacToeHomebase.getTurn();
+        if(mTicTacToeHomebase.isDeviceTurn(turn) && img.getDrawable()==null) {
+            if (turn.equals(mTicTacToeHomebase.getNicknameOfHost())) {
+                DatabaseReference gameRef = mTicTacToeRef.child(mTicTacToeHomebase.getGameId());
+                gameRef.child("turn").setValue(mTicTacToeHomebase.getNicknameOfOpp());
+                img.setImageResource(R.drawable.ic_close_black_80dp);
+                uploadToFirebase(pos, "X", gameRef);
+                mostRecent = pos;
+            } else {
+                DatabaseReference gameRef = mTicTacToeRef.child(mTicTacToeHomebase.getGameId());
+                gameRef.child("turn").setValue(mTicTacToeHomebase.getNicknameOfHost());
+                img.setImageResource(R.drawable.ic_circle_80dp);
+                uploadToFirebase(pos, "O", gameRef);
+                mostRecent = pos;
+            }
+        }
+        else{
+            //Toast
+        }
+    }
+
+    private void uploadToFirebase(String pos, String XorO, DatabaseReference gameRef){
+        gameRef.child(pos).setValue(XorO);
+    }
+
 }

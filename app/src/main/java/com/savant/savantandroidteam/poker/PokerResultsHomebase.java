@@ -249,22 +249,18 @@ public class PokerResultsHomebase {
      * @return the nickname corresponding to that email
      */
     public String getNickname(String email){
-        System.out.println("host email: " + email);
         DataSnapshot userRef = mUsersSnapshot;
-        System.out.println("USER REF: " + userRef.toString());
         Iterable<DataSnapshot> iter = userRef.getChildren();
         for(DataSnapshot child: iter){
             if(email.equals(child.getKey())){
                 Iterable<DataSnapshot> iter2 = child.getChildren();
                 for(DataSnapshot child2: iter2){
                     if(child2.getKey().equals("nickname")){
-                        System.out.println("child2  " + child2.getValue().toString());
                         return child2.getValue().toString();
                     }
                 }
             }
         }
-        System.out.println("Before Return: " + email);
         return getFirstName(email);
     }
 
@@ -296,7 +292,6 @@ public class PokerResultsHomebase {
      * @return the first name of local email given
      */
     public String getFirstName(String email){
-        System.out.println(email);
         String name = email.substring(0, email.indexOf(','));
         try {
             return name.substring(0, 1).toUpperCase() + name.substring(1);

@@ -135,7 +135,6 @@ public class PokerMainFragment extends Fragment {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 //mMeetingsHomebase.deleteMeeting();
-                System.out.println(viewHolder.getAdapterPosition());
                 if(mPokerHomebase.isRevealed(viewHolder.getAdapterPosition())){
                     mPokerHomebase.removeSession(Integer.toString(mPokerHomebase.getIdPos(viewHolder.getAdapterPosition())));
                     addSessionsToView(mPokerHomebase.getSnapshot());
