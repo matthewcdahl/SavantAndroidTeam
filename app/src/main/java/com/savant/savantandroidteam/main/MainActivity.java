@@ -31,6 +31,7 @@ import com.savant.savantandroidteam.meetings.MeetingsMainFragment;
 import com.savant.savantandroidteam.poker.PokerMainFragment;
 import com.savant.savantandroidteam.profile.ProfileFragment;
 import com.savant.savantandroidteam.startup.LoginActivity;
+import com.savant.savantandroidteam.tictactoe.TicTacToeMainFragment;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(savedInstanceState!=null)System.out.println(savedInstanceState.toString());
 
         //Firebase initializations
         mAuth = FirebaseAuth.getInstance();
@@ -178,6 +178,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_log_out:
                 signOutOfAccount();
                 Toast.makeText(this, "Logged Out", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.nav_tic_tac_toe:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TicTacToeMainFragment()).commit();
                 break;
         }
 

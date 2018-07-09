@@ -79,6 +79,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:maxLines="3"
+                        android:text="Description Goes Here"
                         android:textSize="15dp"
                         android:paddingRight="12dp"/>
 
