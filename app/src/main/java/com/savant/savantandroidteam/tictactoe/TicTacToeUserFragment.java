@@ -2,6 +2,7 @@ package com.savant.savantandroidteam.tictactoe;
 
 
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -24,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,27 +38,32 @@ import com.savant.savantandroidteam.meetings.MeetingsHostFragment;
 import com.savant.savantandroidteam.meetings.MeetingsMainFragment;
 import com.savant.savantandroidteam.poker.PokerMainFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static android.content.Context.MODE_PRIVATE;
 
 public class TicTacToeUserFragment extends Fragment {
 
     //UI and Internal Declarations
-    private TextView mNameText;
     private ImageView mTL, mTC, mTR;
     private ImageView mML, mMC, mMR;
     private ImageView mBL, mBC, mBR;
-    private TextView hostSymbol, oppSymbol;
-    private String hostNickname, oppNickname;
-    private String mostRecent;
+    private TicTacToeBoard gameBoard;
+    private String gameID;
+
 
 
 
     //Firebase Declarations
-    private TicTacToeHomebase mTicTacToeHomebase;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRootRef;
     private DatabaseReference mUsersRef;
     private DatabaseReference mTicTacToeRef;
+    private DatabaseReference mCurrGameRef;
+    private DataSnapshot mRootDataSnapshot;
+    private DataSnapshot mGameDataSnapshot;
+    private FirebaseAuth mAuth;
 
     //TOOLBAR
     private ActionBar masterBarHolder;
@@ -81,13 +88,9 @@ public class TicTacToeUserFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new TicTacToeMainFragment()).commit();
+                switchToMain();
             }
         });
-
-        //UI Initializations
-        mNameText = (TextView) view.findViewById(R.id.tv_meeting_user_name);
 
         //Firebase Initializations
         mDatabase = FirebaseDatabase.getInstance();
@@ -95,12 +98,18 @@ public class TicTacToeUserFragment extends Fragment {
         mUsersRef = mDatabase.getReference("users");
         mTicTacToeRef = mDatabase.getReference("tictactoe");
 
+
+        initializeBoard(view);
+
+
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(TicTacToeUserFragment.this.isVisible()) {
-                    mTicTacToeHomebase = new TicTacToeHomebase(dataSnapshot, getContext());
-                    updateView();
+                    mRootDataSnapshot = dataSnapshot;
+                    gameID = getGameID();
+                    mCurrGameRef = mTicTacToeRef.child(gameID);
+                    currGameListener();
                 }
             }
 
@@ -109,7 +118,8 @@ public class TicTacToeUserFragment extends Fragment {
 
             }
         });
-        initializeBoard(view);
+
+
 
         return view;
     }
@@ -137,21 +147,11 @@ public class TicTacToeUserFragment extends Fragment {
     }
 
     private void updateView(){
-        mTL.setImageResource(mTicTacToeHomebase.getTTTatSpot("mTL"));
-        mTC.setImageResource(mTicTacToeHomebase.getTTTatSpot("mTC"));
-        mTR.setImageResource(mTicTacToeHomebase.getTTTatSpot("mTR"));
-        mML.setImageResource(mTicTacToeHomebase.getTTTatSpot("mML"));
-        mMC.setImageResource(mTicTacToeHomebase.getTTTatSpot("mMC"));
-        mMR.setImageResource(mTicTacToeHomebase.getTTTatSpot("mMR"));
-        mBL.setImageResource(mTicTacToeHomebase.getTTTatSpot("mBL"));
-        mBC.setImageResource(mTicTacToeHomebase.getTTTatSpot("mBC"));
-        mBR.setImageResource(mTicTacToeHomebase.getTTTatSpot("mBR"));
-
-        if(mTicTacToeHomebase.gameOver(mostRecent)){
-            Toast.makeText(getContext(), "GAME OVER!!!!", Toast.LENGTH_SHORT).show();
+        String state = gameBoard.getBoardState();
+        for(int i = 0; i<state.length(); i++){
+            if(state.charAt(i) == 'X') setImage(i, "X");
+            else if(state.charAt(i) == 'O') setImage(i, "O");
         }
-
-
     }
 
     private void initializeBoard(View view){
@@ -223,29 +223,113 @@ public class TicTacToeUserFragment extends Fragment {
     }
 
     private void handleBoardClick(ImageView img, String pos){
-        String turn = mTicTacToeHomebase.getTurn();
-        if(mTicTacToeHomebase.isDeviceTurn(turn) && img.getDrawable()==null) {
-            if (turn.equals(mTicTacToeHomebase.getNicknameOfHost())) {
-                DatabaseReference gameRef = mTicTacToeRef.child(mTicTacToeHomebase.getGameId());
-                gameRef.child("turn").setValue(mTicTacToeHomebase.getNicknameOfOpp());
-                img.setImageResource(R.drawable.ic_close_black_80dp);
-                uploadToFirebase(pos, "X", gameRef);
-                mostRecent = pos;
-            } else {
-                DatabaseReference gameRef = mTicTacToeRef.child(mTicTacToeHomebase.getGameId());
-                gameRef.child("turn").setValue(mTicTacToeHomebase.getNicknameOfHost());
-                img.setImageResource(R.drawable.ic_circle_80dp);
-                uploadToFirebase(pos, "O", gameRef);
-                mostRecent = pos;
-            }
+        if(userIsHost()){
+
         }
         else{
-            //Toast
+
         }
     }
 
-    private void uploadToFirebase(String pos, String XorO, DatabaseReference gameRef){
-        gameRef.child(pos).setValue(XorO);
+
+    private List<TicTacToeBoard> getGames(){
+        List<TicTacToeBoard> games = new ArrayList<>();
+        Iterable<DataSnapshot> iter = mRootDataSnapshot.getChildren();
+        for(DataSnapshot child: iter){
+            if(child.getKey().equals("tictactoe")){
+                Iterable<DataSnapshot> iter2 = child.getChildren();
+                for(DataSnapshot child2: iter2){
+                    TicTacToeBoard toAdd = new TicTacToeBoard();
+                    Iterable<DataSnapshot> iter3 = child2.getChildren();
+                    for(DataSnapshot child3: iter3){
+                        if(child3.getKey().equals("opp")) toAdd.setOpp(child3.getValue().toString());
+                        else if(child3.getKey().equals("id")) toAdd.setId(child3.getValue().toString());
+                        //If needed add other states here by using, else if(child3.getKey().equals(@state))
+                    }
+                    games.add(toAdd);
+                }
+            }
+        }
+        return games;
     }
+
+    private String getGameID() {
+        SharedPreferences tttPrefs = getContext().getSharedPreferences("tictactoe", MODE_PRIVATE);
+        String from = tttPrefs.getString("from", "error");
+        if (from.equals("host")) {
+            return tttPrefs.getString("id", "-1");
+        } else {//from main
+            return getIdFromPos(tttPrefs.getString("id", "-1"));
+        }
+    }
+
+    private String getIdFromPos(String pos){
+        List<TicTacToeBoard> boards = getGames();
+        return boards.get(Integer.parseInt(pos)).getId();
+    }
+
+    private void currGameListener(){
+        mCurrGameRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mGameDataSnapshot = dataSnapshot;
+                gameBoard.setId(getGameValue("id"));
+                gameBoard.setHost(getGameValue("host"));
+                gameBoard.setOpp(getGameValue("opp"));
+                gameBoard.setBoardState(getGameValue("state"));
+                gameBoard.setTurn(getGameValue("turn"));
+                gameBoard.setWinner(getGameValue("winner"));
+                updateView();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private String getGameValue(String key){
+        Iterable<DataSnapshot> iter = mGameDataSnapshot.getChildren();
+        for(DataSnapshot child: iter){
+            if(child.getKey().equals(key)) return child.getValue().toString();
+        }
+        return "ERROR";
+    }
+
+    private void setImage(int pos, String symbol){
+        int symbolDraw;
+        if(symbol.equals("X"))symbolDraw = R.drawable.ic_close_black_80dp;
+        else if(symbol.equals("O")) symbolDraw = R.drawable.ic_circle_80dp;
+        else symbolDraw = 0;
+
+        if(pos == 0) mTL.setImageResource(symbolDraw);
+        else if(pos == 1) mTC.setImageResource(symbolDraw);
+        else if(pos == 2) mTR.setImageResource(symbolDraw);
+        else if(pos == 3) mML.setImageResource(symbolDraw);
+        else if(pos == 4) mMC.setImageResource(symbolDraw);
+        else if(pos == 5) mMR.setImageResource(symbolDraw);
+        else if(pos == 6) mBL.setImageResource(symbolDraw);
+        else if(pos == 7) mBC.setImageResource(symbolDraw);
+        else if(pos == 8) mBR.setImageResource(symbolDraw);
+
+    }
+
+    private boolean userIsHost(){
+        String email = getDeviceModifiedEmail();
+        return true;
+    }
+
+    private String getDeviceModifiedEmail(){
+        String old = mAuth.getCurrentUser().getEmail();
+        String email = old.replace('.', ',');
+
+        DataSnapshot usersSnap = mRootDataSnapshot.child("users");
+        DataSnapshot userSnap = usersSnap.child(email);
+        Iterable<DataSnapshot> iter = userSnap.getChildren();
+
+        return "";
+    }
+
 
 }

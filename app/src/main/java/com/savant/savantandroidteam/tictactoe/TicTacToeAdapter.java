@@ -28,14 +28,14 @@ import java.util.List;
 
 public class TicTacToeAdapter extends RecyclerView.Adapter<TicTacToeAdapter.ViewHolder> {
 
-    private List<TicTacToeItem> listItems;
+    private List<TicTacToeBoard> listItems;
     private Context context;
 
     //Firebase
     private FirebaseAuth mAuth;
     private String userName;
 
-    public TicTacToeAdapter(List<TicTacToeItem> listItems, Context context) {
+    public TicTacToeAdapter(List<TicTacToeBoard> listItems, Context context) {
         this.listItems = listItems;
         this.context = context;
         mAuth = FirebaseAuth.getInstance();
@@ -57,7 +57,7 @@ public class TicTacToeAdapter extends RecyclerView.Adapter<TicTacToeAdapter.View
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final TicTacToeItem listItem = listItems.get(position);
+        final TicTacToeBoard listItem = listItems.get(position);
         String status;
 
         Resources r = context.getResources();
@@ -75,8 +75,8 @@ public class TicTacToeAdapter extends RecyclerView.Adapter<TicTacToeAdapter.View
             setMargins(holder.linearLayout, 0,px3,0,px6);
         }
 
-        holder.opp.setText(listItem.getOpp());
-        holder.name.setText(listItem.getName());
+        holder.opp.setText("");//This needs to be renamed in the xml file
+        holder.name.setText(listItem.getOpp());
 
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,8 +118,8 @@ public class TicTacToeAdapter extends RecyclerView.Adapter<TicTacToeAdapter.View
     private void handleClick(int position, final View view) {
 
         SharedPreferences.Editor tttPrefs = context.getSharedPreferences("tictactoe", Context.MODE_PRIVATE).edit();
-        System.out.println(position);
-        tttPrefs.putString("gamePos", Integer.toString(position));
+        tttPrefs.putString("from", "main");
+        tttPrefs.putString("id", Integer.toString(position));
         tttPrefs.commit();
 
         AppCompatActivity activity = (AppCompatActivity) view.getContext();

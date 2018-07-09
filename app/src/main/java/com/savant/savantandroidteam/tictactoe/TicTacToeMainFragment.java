@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -45,13 +46,13 @@ public class TicTacToeMainFragment extends Fragment {
     FirebaseDatabase mDatabase;
     DatabaseReference mRootRef;
     DatabaseReference mTicTacToeRef;
-    private TicTacToeHomebase mTicTacToeHomebase;
+    DataSnapshot mDataSnapshot;
 
 
     //UI Declarations
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter adapter;
-    private List<TicTacToeItem> ticTacToeItems;
+    private List<TicTacToeBoard> ticTacToeItems;
     private TextView mNoCurrentText;
     private TextView mClickPlusText;
 
@@ -81,7 +82,7 @@ public class TicTacToeMainFragment extends Fragment {
         mRootRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                mTicTacToeHomebase = new TicTacToeHomebase(dataSnapshot, getContext());
+                mDataSnapshot = dataSnapshot;
                 setStartText();
                 addGamesToView();
             }
@@ -115,7 +116,7 @@ public class TicTacToeMainFragment extends Fragment {
 
     //Initialize the adapter to populate the recycler view
     private void addGamesToView() {
-        ticTacToeItems = mTicTacToeHomebase.getGames();
+        ticTacToeItems = getGames();
         adapter = new TicTacToeAdapter(ticTacToeItems, getContext());
         mRecyclerView.setAdapter(adapter);
 
@@ -203,12 +204,41 @@ public class TicTacToeMainFragment extends Fragment {
 
     //If there are no current meetings this will diplay the starter text
     private void setStartText() {
-        if (mTicTacToeHomebase.getNumberOfSessions() == 0) {
+        List<TicTacToeBoard> games = getGames();
+        if(games.size() == 0){
             mNoCurrentText.setVisibility(View.VISIBLE);
             mClickPlusText.setVisibility(View.VISIBLE);
-        } else {
-            mNoCurrentText.setVisibility(View.GONE);
-            mClickPlusText.setVisibility(View.GONE);
+        }
+        else{
+            mNoCurrentText.setVisibility(View.INVISIBLE);
+            mClickPlusText.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private List<TicTacToeBoard> getGames(){
+        List<TicTacToeBoard> games = new ArrayList<>();
+        Iterable<DataSnapshot> iter = mDataSnapshot.getChildren();
+        for(DataSnapshot child: iter){
+            if(child.getKey().equals("tictactoe")){
+                Iterable<DataSnapshot> iter2 = child.getChildren();
+                for(DataSnapshot child2: iter2){
+                    TicTacToeBoard toAdd = new TicTacToeBoard();
+                    Iterable<DataSnapshot> iter3 = child2.getChildren();
+                    for(DataSnapshot child3: iter3){
+                        if(child3.getKey().equals("opp")) toAdd.setOpp(child3.getValue().toString());
+                        //If needed add other states here by using, else if(child3.getKey().equals(@state))
+                    }
+                    games.add(toAdd);
+                }
+            }
+        }
+        return games;
+    }
+
+
+    private void printGame(List<TicTacToeBoard> toPrint){
+        for(int i = 0; i<toPrint.size(); i++){
+            toPrint.get(i).printBoard();
         }
     }
 
