@@ -19,8 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.ActionBar;
@@ -35,19 +38,20 @@ import com.google.firebase.database.ValueEventListener;
 import com.savant.savantandroidteam.main.MainActivity;
 import com.savant.savantandroidteam.R;
 
+import java.util.ArrayList;
+
 /*
     This is the fragment for when a user creates a poker session
  */
 
-public class PokerHostFragment extends Fragment {
+public class PokerHostFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //UI Declarations
     private Button mShowResponses;
     private Button mSubmitName;
-    private Button mSubmitDiff;
     private TextView mResponsesText;
     private EditText mName;
-    private EditText mDiff;
+    private Spinner mDiffSpinner;
 
 
     //Firebase Declarations
@@ -98,15 +102,18 @@ public class PokerHostFragment extends Fragment {
         //UI Initializations
         mShowResponses = (Button) view.findViewById(R.id.poker_show_response_btn);
         mSubmitName = (Button) view.findViewById(R.id.submit_activity_name_host);
-        mSubmitDiff = (Button) view.findViewById(R.id.submit_activity_diff_host);
         mResponsesText = (TextView) view.findViewById(R.id.poker_response_number);
         dialogIsOpen = false;
 
         mName = (EditText) view.findViewById(R.id.et_sprint_name);
         mName.setText(getSessionNAME());
 
-        mDiff = (EditText) view.findViewById(R.id.et_difficulty);
-        mDiff.setText(getSessionDIFF());
+        mDiffSpinner = view.findViewById(R.id.spinner_difficulty);
+        setUpSpinner();
+        mDiffSpinner.setSelection(getPosFromName(getSessionDIFF()));
+        mDiffSpinner.setOnItemSelectedListener(this);
+
+
 
         //Firebase Initializations
         mAuth = FirebaseAuth.getInstance();
@@ -131,20 +138,6 @@ public class PokerHostFragment extends Fragment {
             }
         });
 
-        mDiff.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
-                    submitDiff();
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-        });
 
 
 
@@ -152,14 +145,6 @@ public class PokerHostFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 submitName();
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-            }
-        });
-        mSubmitDiff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitDiff();
                 InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }
@@ -214,14 +199,9 @@ public class PokerHostFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Clear focus from the edit text
-     * TODO test if it actually does anything
-     */
     @Override
     public void onPause() {
         super.onPause();
-        mDiff.clearFocus();
     }
 
     /**
@@ -236,13 +216,12 @@ public class PokerHostFragment extends Fragment {
      * upload response to firebase
      */
     private void submitDiff(){
-        String diff = mDiff.getText().toString();
-        if(diff.isEmpty()) diff = "0";
-        String userEmail = getModifiedEmail();
-        DatabaseReference userRef = mCurrentSession.child("responses");
-        userRef.child(userEmail).setValue(diff);
-        mDiff.clearFocus();
-
+        String diff = mDiffSpinner.getSelectedItem().toString();
+        if(!diff.equals("Select...")) {
+            String userEmail = getModifiedEmail();
+            DatabaseReference userRef = mCurrentSession.child("responses");
+            userRef.child(userEmail).setValue(diff);
+        }
     }
 
     /**
@@ -328,13 +307,43 @@ public class PokerHostFragment extends Fragment {
         return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
     }
 
-    
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        submitDiff();
+    }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {}
 
+    private void setUpSpinner(){
+        String[] arr = {"Select...", "Mouse", "Groundhog", "Fox", "Lion", "Buffalo","Elephant","Honey Badger"};
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, arr);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mDiffSpinner.setAdapter(spinnerArrayAdapter);
+    }
 
-
-
-
-
+    private int getPosFromName(String name){
+        if(name!=null) {
+            switch (name) {
+                case "Mouse":
+                    return 1;
+                case "Groundhog":
+                    return 2;
+                case "Fox":
+                    return 3;
+                case "Lion":
+                    return 4;
+                case "Buffalo":
+                    return 5;
+                case "Elephant":
+                    return 6;
+                case "Honey Badger":
+                    return 7;
+                default:
+                    return 0;
+            }
+        }
+        else return 0;
+    }
 }

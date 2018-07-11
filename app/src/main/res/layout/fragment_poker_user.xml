@@ -18,10 +18,9 @@
         android:id="@+id/tv_session_name_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/llUser"
         android:text="Session Name"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
+        android:layout_marginTop="80dp"
         android:textSize="30sp"
         android:textColor="#FFFFFF"/>
 
@@ -31,12 +30,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/llUser"
-        android:layout_marginTop="0dp"
-        android:layout_centerInParent="true">
+        android:layout_marginTop="150dp"
+        android:layout_centerHorizontal="true">
 
-        <EditText
-            android:id="@+id/et_difficulty_user"
-            android:layout_width="100dp"
+        <Spinner
+            android:id="@+id/spinner_difficulty"
+            android:layout_width="200dp"
             android:layout_height="40dp"
             android:background="@drawable/et_background_session_diff"
             android:hint="#"
@@ -44,14 +43,6 @@
             android:textAlignment="center"
             android:textSize="25sp"
             android:inputType="number"/>
-        <Button
-            android:id="@+id/submit_activity_diff_user"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_marginTop="-4dp"
-            android:layout_marginLeft="15dp"
-            android:text="submit"
-            android:background="@drawable/submit_poker_host_btn"/>
     </LinearLayout>
 
     <TextView

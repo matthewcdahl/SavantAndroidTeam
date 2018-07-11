@@ -82,12 +82,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="17dp"
-                android:text="Rating:"
+                android:text="Response:"
                 android:textColor="#FFFFFF"
                 android:textSize="25sp" />
 
-            <EditText
-                android:id="@+id/et_difficulty"
+            <Spinner
+                android:id="@+id/spinner_difficulty"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
@@ -106,22 +106,10 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/submit_activity_diff_host"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_alignRight="@id/ll1"
-            android:layout_below="@id/ll2"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/submit_poker_host_btn"
-            android:text="submit" />
-
-        <Button
             android:id="@+id/poker_show_response_btn"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:layout_below="@id/submit_activity_diff_host"
+            android:layout_below="@id/ll2"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
             android:background="@drawable/show_responses_btn_backgroung"

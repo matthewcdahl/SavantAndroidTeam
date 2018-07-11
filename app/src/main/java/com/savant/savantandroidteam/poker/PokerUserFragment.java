@@ -14,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,13 +30,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.savant.savantandroidteam.main.MainActivity;
 import com.savant.savantandroidteam.R;
 
-public class PokerUserFragment extends Fragment {
+public class PokerUserFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //UI Declarations
-    private Button mSubmitDiff;
-    private EditText mDiff;
     private TextView mWaitingText;
     private TextView mSessionName;
+    private Spinner mDiffSpinner;
 
 
     //Firebase Declarations
@@ -47,6 +49,8 @@ public class PokerUserFragment extends Fragment {
     //TOOLBAR
     private android.support.v7.app.ActionBar masterBarHolder;
     Toolbar toolbar;
+
+    //Internal
 
 
     @Nullable
@@ -67,24 +71,17 @@ public class PokerUserFragment extends Fragment {
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, new PokerMainFragment()).commit();
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }
         });
 
 
         //UI
-        mSubmitDiff = (Button) view.findViewById(R.id.submit_activity_diff_user);
-
-        mDiff = (EditText) view.findViewById(R.id.et_difficulty_user);
-        mDiff.setText(getSessionDIFF());
-        mDiff.setCursorVisible(false);
-        mDiff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDiff.setCursorVisible(true);
-            }
-        });
+        mDiffSpinner = view.findViewById(R.id.spinner_difficulty);
+        setUpSpinner();
+        mDiffSpinner.setSelection(getPosFromName(getSessionDIFF()));
+        mDiffSpinner.setOnItemSelectedListener(this);
 
         mWaitingText = (TextView) view.findViewById(R.id.tv_waiting);
         waitingText();
@@ -101,68 +98,44 @@ public class PokerUserFragment extends Fragment {
         mNameRef = mCurrentSession.child("name");
 
 
-        //Will submit the user answer when keyboard ime Action is pressed
-        mDiff.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if ((actionId & EditorInfo.IME_MASK_ACTION) != 0) {
-                    submitDiff();
-                    mWaitingText.setVisibility(View.VISIBLE);
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            }
-        });
-
         //Firebase Reference for when the host shows responses
         mRevealedRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null && dataSnapshot.getValue().toString().equals("true")){
+                if (dataSnapshot.getValue() != null && dataSnapshot.getValue().toString().equals("true")) {
                     String id = getSessionID();
                     PokerResultsFragment fragment = new PokerResultsFragment();
                     Bundle arguments = new Bundle();
                     arguments.putString("ID", id);
                     fragment.setArguments(arguments);
                     FragmentTransaction ft;
-                    try{
+                    try {
                         ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.fragment_container, fragment);
                         ft.commit();
-                    } catch (Exception e){}
+                    } catch (Exception e) {
+                    }
 
 
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
 
         //Firebase reference for showing the name of the session real time.
         mNameRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue()!=null) {
+                if (dataSnapshot.getValue() != null) {
                     mSessionName.setText(dataSnapshot.getValue().toString());
                 }
             }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
 
-
-        // When the submit button is clicked
-        mSubmitDiff.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                submitDiff();
-                mWaitingText.setVisibility(View.VISIBLE);
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
 
@@ -173,21 +146,21 @@ public class PokerUserFragment extends Fragment {
     /**
      * Pushes the users name and response to firebase in the form of Key: First name, Value: Response
      */
-    private void submitDiff(){
-        mDiff.setCursorVisible(false);
-        String diff = mDiff.getText().toString();
-        if(diff.isEmpty()) diff = "0";
-        String userEmail = getModifiedEmail();
-        DatabaseReference userRef = mCurrentSession.child("responses");
-        userRef.child(userEmail).setValue(diff);
+    private void submitDiff() {
+        String diff = mDiffSpinner.getSelectedItem().toString();
+        if(!diff.equals("Select...")) {
+            String userEmail = getModifiedEmail();
+            DatabaseReference userRef = mCurrentSession.child("responses");
+            userRef.child(userEmail).setValue(diff);
+        }
+
 
     }
 
     /**
-     *
      * @return the unique id of the session from the bundled arguments from the main fragment
      */
-    private String getSessionID(){
+    private String getSessionID() {
         Bundle arguments = getArguments();
         String session = arguments.getString("ID");
         return session;
@@ -195,10 +168,9 @@ public class PokerUserFragment extends Fragment {
     }
 
     /**
-     *
      * @return the current response from the user
      */
-    private String getSessionDIFF(){
+    private String getSessionDIFF() {
         Bundle arguments = getArguments();
         String diff = arguments.getString("DIFF");
         return diff;
@@ -208,18 +180,18 @@ public class PokerUserFragment extends Fragment {
     /**
      * If the user has given a response they will be told to wait for host
      */
-    private void waitingText(){
-        if(getSessionDIFF() == "") mWaitingText.setVisibility(View.GONE);
+    private void waitingText() {
+        if (mDiffSpinner.getSelectedItem().toString().equals("Select..."))
+            mWaitingText.setVisibility(View.GONE);
         else mWaitingText.setVisibility(View.VISIBLE);
 
     }
 
 
-
     /**
      * @return name of the session from the main fragment bundle
      */
-    private String getSessionNAME(){
+    private String getSessionNAME() {
         Bundle arguments = getArguments();
         String name = arguments.getString("NAME");
         return name;
@@ -229,13 +201,50 @@ public class PokerUserFragment extends Fragment {
      * @return the modified email with ',' from firebase
      */
     @NonNull
-    private String getModifiedEmail(){
-        return mAuth.getCurrentUser().getEmail().trim().replace('.',',');
+    private String getModifiedEmail() {
+        return mAuth.getCurrentUser().getEmail().trim().replace('.', ',');
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        submitDiff();
+    }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+    }
 
+    private void setUpSpinner() {
+        String[] arr;
+        arr = new String[]{"Select...", "Mouse", "Groundhog", "Fox", "Lion", "Buffalo", "Elephant", "Honey Badger"};
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, arr);
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mDiffSpinner.setAdapter(spinnerArrayAdapter);
+    }
 
+    private int getPosFromName(String name){
+        if(name!=null) {
+            switch (name) {
+                case "Mouse":
+                    return 1;
+                case "Groundhog":
+                    return 2;
+                case "Fox":
+                    return 3;
+                case "Lion":
+                    return 4;
+                case "Buffalo":
+                    return 5;
+                case "Elephant":
+                    return 6;
+                case "Honey Badger":
+                    return 7;
+                default:
+                    return 0;
+            }
+        }
+        else return 0;
+    }
 
 
 }
