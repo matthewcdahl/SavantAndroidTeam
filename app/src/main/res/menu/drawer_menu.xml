@@ -16,10 +16,6 @@
             android:id="@+id/nav_sprint"
             android:icon="@drawable/ic_sprint"
             android:title="Sprint Meetings" />
-        <item
-            android:id="@+id/nav_tic_tac_toe"
-            android:icon="@drawable/tic_tac_toe"
-            android:title="Tic Tac Toe" />
     </group>
 
 
