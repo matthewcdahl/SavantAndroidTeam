@@ -152,6 +152,7 @@ public class PokerUserFragment extends Fragment implements AdapterView.OnItemSel
             String userEmail = getModifiedEmail();
             DatabaseReference userRef = mCurrentSession.child("responses");
             userRef.child(userEmail).setValue(diff);
+            waitingText();
         }
 
 
@@ -181,9 +182,10 @@ public class PokerUserFragment extends Fragment implements AdapterView.OnItemSel
      * If the user has given a response they will be told to wait for host
      */
     private void waitingText() {
-        if (mDiffSpinner.getSelectedItem().toString().equals("Select..."))
-            mWaitingText.setVisibility(View.GONE);
-        else mWaitingText.setVisibility(View.VISIBLE);
+        if (mDiffSpinner.getSelectedItem().toString().equals("Select...")) mWaitingText.setVisibility(View.GONE);
+        else {
+            mWaitingText.setVisibility(View.VISIBLE);
+        }
 
     }
 
